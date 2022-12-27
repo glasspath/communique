@@ -1,0 +1,79 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>communique-main</artifactId>
+
+	<parent>
+		<groupId>org.glasspath.communique</groupId>
+		<artifactId>communique</artifactId>
+		<version>0.0.1</version>
+	</parent>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>org.glasspath.aerialist</groupId>
+			<artifactId>aerialist-main</artifactId>
+			<version>${aerialist.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.glasspath.common</groupId>
+			<artifactId>common-share-core</artifactId>
+			<version>${common.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.glasspath.common</groupId>
+			<artifactId>common-share-appkit</artifactId>
+			<version>${common.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.glasspath.common</groupId>
+			<artifactId>common-share-mapi</artifactId>
+			<version>${common.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.glasspath.common</groupId>
+			<artifactId>common-share-outlook</artifactId>
+			<version>${common.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.glasspath.common</groupId>
+			<artifactId>common-share-thunderbird</artifactId>
+			<version>${common.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.glasspath.common</groupId>
+			<artifactId>common-share-uwp</artifactId>
+			<version>${common.version}</version>
+		</dependency>
+
+		<dependency>
+		    <groupId>org.simplejavamail</groupId>
+		    <artifactId>simple-java-mail</artifactId>
+		    <version>7.5.0</version>
+		</dependency>
+		<!--
+		<dependency>
+		    <groupId>org.simplejavamail</groupId>
+		    <artifactId>outlook-module</artifactId>
+		    <version>7.5.0</version>
+		</dependency>
+		-->
+
+	</dependencies>
+
+	<build>
+
+		<finalName>${artifactId}</finalName>
+
+	</build>
+
+</project>
