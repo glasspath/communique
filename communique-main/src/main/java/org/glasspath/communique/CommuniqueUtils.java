@@ -2,7 +2,6 @@ package org.glasspath.communique;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.PrintWriter;
 import java.net.URI;
 import java.util.List;
 import java.util.Map.Entry;
@@ -14,7 +13,9 @@ import org.glasspath.aerialist.HtmlExporter;
 import org.glasspath.aerialist.media.MediaCache.ImageResource;
 import org.glasspath.common.GlasspathSystemProperties;
 import org.glasspath.common.os.OsUtils;
+import org.glasspath.common.share.ShareException;
 import org.glasspath.common.share.appkit.AppKitShareUtils;
+import org.glasspath.common.share.mail.MailShareUtils;
 import org.glasspath.common.share.mail.MailUtils;
 import org.glasspath.common.share.mail.Mailable;
 import org.glasspath.common.share.mail.account.Account;
@@ -30,11 +31,7 @@ import org.glasspath.communique.account.AccountLoginDialog;
 import org.glasspath.communique.account.SmtpAccountFinderDialog;
 import org.glasspath.communique.editor.EmailEditorPanel;
 import org.simplejavamail.api.email.EmailPopulatingBuilder;
-import org.simplejavamail.api.mailer.Mailer;
-import org.simplejavamail.api.mailer.config.TransportStrategy;
-import org.simplejavamail.converter.EmailConverter;
 import org.simplejavamail.email.EmailBuilder;
-import org.simplejavamail.mailer.MailerBuilder;
 
 import jakarta.activation.FileDataSource;
 
@@ -134,7 +131,8 @@ public class CommuniqueUtils {
 
 	}
 
-	public static org.simplejavamail.api.email.Email createSimpleEmail(Communique context, Account account) {
+	// TODO: Move to MailShareUtils
+	public static org.simplejavamail.api.email.Email createSimpleEmail(Communique context, Account account) throws ShareException {
 
 		EmailEditorPanel emailEditor = context.getMainPanel().getEmailEditor();
 		Email email = emailEditor.getEmailContainer().toEmail();
@@ -206,14 +204,12 @@ public class CommuniqueUtils {
 			return builder.buildEmail();
 
 		} catch (Exception e) {
-			Communique.LOGGER.error("Exception while generating email: ", e); //$NON-NLS-1$
+			throw new ShareException("Could not create simple email", e); //$NON-NLS-1$
 		}
-
-		return null;
 
 	}
 
-	public static void sendSmtp(Communique context, SmtpAccount account) {
+	public static boolean sendSmtp(Communique context, SmtpAccount account) {
 
 		AccountLoginDialog loginDialog = new AccountLoginDialog(context, account == null ? "" : account.getEmail(), "", account == null); //$NON-NLS-1$ //$NON-NLS-2$
 		if (loginDialog.login() == LoginDialog.RESULT_OK) {
@@ -239,121 +235,34 @@ public class CommuniqueUtils {
 
 			if (account != null) {
 
-				org.simplejavamail.api.email.Email simpleEmail = CommuniqueUtils.createSimpleEmail(context, account);
-				if (simpleEmail != null) {
+				try {
 
-					// TODO: Run in thread and show progress dialog
+					org.simplejavamail.api.email.Email simpleEmail = CommuniqueUtils.createSimpleEmail(context, account);
+					if (simpleEmail != null) {
 
-					CompletableFuture<Void> future = CommuniqueUtils.sendSimpleEmail(context, simpleEmail, account, loginDialog.getPassword());
+						// TODO: Run in thread and show progress dialog
 
-					if (future != null) {
+						CompletableFuture<Void> future = MailShareUtils.sendSimpleEmail(simpleEmail, account, loginDialog.getPassword(), context.getConfiguration().getTimeout());
 
-						try {
+						if (future != null) {
+
 							future.get();
-						} catch (Exception e) {
-							Communique.LOGGER.error("Exception while busy sending mail (smtp): ", e); //$NON-NLS-1$
+
+							return true;
+
 						}
 
 					}
 
+				} catch (Exception e) {
+					Communique.LOGGER.error("Exception while sending mail (smtp): ", e); //$NON-NLS-1$
 				}
 
 			}
 
 		}
 
-	}
-
-	public static void testAccount(Communique context, SmtpAccount account, String password) {
-
-		if (account != null && account.isValid() && password != null) {
-
-			Mailer mailer = MailerBuilder
-					.withSMTPServer(account.getHost(), account.getPort(), account.getEmail(), password)
-					.withTransportStrategy(TransportStrategy.SMTPS)
-					.withSessionTimeout(context.getConfiguration().getTimeout())
-					.buildMailer();
-
-			Communique.LOGGER.info("Testing connection, host: " + account.getHost() + ", port: " + account.getPort()); //$NON-NLS-1$ //$NON-NLS-2$
-			mailer.testConnection();
-			Communique.LOGGER.info("Testing connection finished"); //$NON-NLS-1$
-
-		} else {
-			throw new IllegalArgumentException();
-		}
-
-	}
-
-	public static CompletableFuture<Void> sendSimpleEmail(Communique context, org.simplejavamail.api.email.Email email, SmtpAccount account, String password) {
-
-		if (account != null && account.isValid() && password != null) {
-
-			Mailer mailer = MailerBuilder
-					.withSMTPServer(account.getHost(), account.getPort(), account.getEmail(), password)
-					.withTransportStrategy(TransportStrategy.SMTPS)
-					.withSessionTimeout(context.getConfiguration().getTimeout())
-					.buildMailer();
-
-			// mailer.testConnection();
-			Communique.LOGGER.info("Sending email with id: " + email.getId()); //$NON-NLS-1$
-
-			try {
-
-				/*
-				TransportRunner.setListener(new Listener() {
-				
-					@Override
-					public void transportSelected(Transport transport) {
-				
-						transport.addConnectionListener(new ConnectionListener() {
-				
-							@Override
-							public void opened(ConnectionEvent e) {
-								System.out.println("opened");
-							}
-				
-							@Override
-							public void disconnected(ConnectionEvent e) {
-								System.out.println("disconnected");
-							}
-				
-							@Override
-							public void closed(ConnectionEvent e) {
-								System.out.println("closed");
-							}
-						});
-				
-						transport.addTransportListener(new TransportListener() {
-				
-							@Override
-							public void messagePartiallyDelivered(TransportEvent e) {
-								System.out.println("messagePartiallyDelivered");
-							}
-				
-							@Override
-							public void messageNotDelivered(TransportEvent e) {
-								System.out.println("messageNotDelivered");
-							}
-				
-							@Override
-							public void messageDelivered(TransportEvent e) {
-								System.out.println("messageDelivered");
-							}
-						});
-				
-					}
-				});
-				*/
-
-				return mailer.sendMail(email);
-
-			} catch (Exception e) {
-				Communique.LOGGER.error("Exception while sending mail (smtp): ", e); //$NON-NLS-1$
-			}
-
-		}
-
-		return null;
+		return false;
 
 	}
 
@@ -364,13 +273,8 @@ public class CommuniqueUtils {
 			org.simplejavamail.api.email.Email simpleEmail = CommuniqueUtils.createSimpleEmail(context, context.getAccount());
 			if (simpleEmail != null) {
 
-				String eml = EmailConverter.emailToEML(simpleEmail);
-
 				File emlFile = new File(getTempDir(), "draft.eml"); // TODO?
-				try (PrintWriter out = new PrintWriter(emlFile)) {
-					out.println(eml);
-				}
-
+				MailShareUtils.exportToEml(simpleEmail, emlFile);
 				DesktopUtils.open(emlFile);
 
 				return true;
@@ -389,21 +293,19 @@ public class CommuniqueUtils {
 
 		Mailable mailable = createMailable(context);
 
-		String mailto = "mailto:" + MailUtils.createRecipientsString(mailable.getTo(), ",");
-		mailto += "?subject=" + mailable.getSubject();
-		// TODO: CC & BCC
-		mailto += "&body=" + mailable.getText();
+		try {
 
-		// TODO?
-		mailto = mailto.replace(" ", "%20");
-		mailto = mailto.replace("\n", "%0D%0A");
+			URI mailtoURI = MailShareUtils.createMailtoUri(mailable);
 
-		// System.out.println("mailto = " + mailto);
+			DesktopUtils.mail(mailtoURI);
 
-		// TODO: Catch exception
-		DesktopUtils.mail(URI.create(mailto));
+			return true;
 
-		return true;
+		} catch (Exception e) {
+			Communique.LOGGER.error("Exception while sharing email through mailto", e); //$NON-NLS-1$
+		}
+
+		return false;
 
 	}
 
@@ -412,9 +314,13 @@ public class CommuniqueUtils {
 		Mailable mailable = createMailable(context);
 
 		try {
+
 			MapiShareUtils.createEmail(mailable);
+
+			return true;
+
 		} catch (Exception e) {
-			Communique.LOGGER.error("Exception while sharing email through Mapi", e);
+			Communique.LOGGER.error("Exception while sharing email through Mapi", e); //$NON-NLS-1$
 		}
 
 		return false;
@@ -426,9 +332,13 @@ public class CommuniqueUtils {
 		Mailable mailable = createMailable(context);
 
 		try {
+
 			OutlookShareUtils.createEmail(mailable);
+
+			return true;
+
 		} catch (Exception e) {
-			Communique.LOGGER.error("Exception while sharing email through Outlook (COM)", e);
+			Communique.LOGGER.error("Exception while sharing email through Outlook (COM)", e); //$NON-NLS-1$
 		}
 
 		return false;
@@ -440,9 +350,13 @@ public class CommuniqueUtils {
 		Mailable mailable = createMailable(context);
 
 		try {
+
 			OutlookShareUtils.createCommandLineEmail(mailable, null);
+
+			return true;
+
 		} catch (Exception e) {
-			Communique.LOGGER.error("Exception while sharing email through Outlook (command line)", e);
+			Communique.LOGGER.error("Exception while sharing email through Outlook (command line)", e); //$NON-NLS-1$
 		}
 
 		return false;
@@ -454,9 +368,13 @@ public class CommuniqueUtils {
 		Mailable mailable = createMailable(context);
 
 		try {
+
 			ThunderbirdShareUtils.createCommandLineEmail(mailable);
+
+			return true;
+
 		} catch (Exception e) {
-			Communique.LOGGER.error("Exception while sharing email through Thunderbird (command line)", e);
+			Communique.LOGGER.error("Exception while sharing email through Thunderbird (command line)", e); //$NON-NLS-1$
 		}
 
 		return false;
@@ -473,9 +391,13 @@ public class CommuniqueUtils {
 		}
 
 		try {
+
 			UwpShareUtils.showShareMenu(context.getFrame(), mailable, assemblyResolvePath);
+
+			return true;
+
 		} catch (Exception e) {
-			Communique.LOGGER.error("Exception while sharing email through UWP share menu", e);
+			Communique.LOGGER.error("Exception while sharing email through UWP share menu", e); //$NON-NLS-1$
 		}
 
 		return false;
@@ -487,9 +409,13 @@ public class CommuniqueUtils {
 		Mailable mailable = createMailable(context);
 
 		try {
+
 			AppKitShareUtils.createEmail(mailable);
+
+			return true;
+
 		} catch (Exception e) {
-			Communique.LOGGER.error("Exception while sharing email through AppKit", e);
+			Communique.LOGGER.error("Exception while sharing email through AppKit", e); //$NON-NLS-1$
 		}
 
 		return false;

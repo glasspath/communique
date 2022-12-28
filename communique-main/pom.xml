@@ -27,6 +27,12 @@
 
 		<dependency>
 			<groupId>org.glasspath.common</groupId>
+			<artifactId>common-share-mail</artifactId>
+			<version>${common.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.glasspath.common</groupId>
 			<artifactId>common-share-appkit</artifactId>
 			<version>${common.version}</version>
 		</dependency>
@@ -54,19 +60,6 @@
 			<artifactId>common-share-uwp</artifactId>
 			<version>${common.version}</version>
 		</dependency>
-
-		<dependency>
-		    <groupId>org.simplejavamail</groupId>
-		    <artifactId>simple-java-mail</artifactId>
-		    <version>7.5.0</version>
-		</dependency>
-		<!--
-		<dependency>
-		    <groupId>org.simplejavamail</groupId>
-		    <artifactId>outlook-module</artifactId>
-		    <version>7.5.0</version>
-		</dependency>
-		-->
 
 	</dependencies>
 

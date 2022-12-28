@@ -25,12 +25,12 @@ package org.glasspath.communique.account;
 import javax.swing.BorderFactory;
 import javax.swing.SwingUtilities;
 
+import org.glasspath.common.share.mail.MailShareUtils;
 import org.glasspath.common.share.mail.Smtp;
 import org.glasspath.common.share.mail.account.SmtpAccount;
 import org.glasspath.common.swing.console.Console;
 import org.glasspath.common.swing.dialog.DefaultDialog;
 import org.glasspath.communique.Communique;
-import org.glasspath.communique.CommuniqueUtils;
 
 public class SmtpAccountFinderDialog extends DefaultDialog {
 
@@ -79,7 +79,7 @@ public class SmtpAccountFinderDialog extends DefaultDialog {
 
 							try {
 
-								CommuniqueUtils.testAccount(context, account, password);
+								MailShareUtils.testAccount(account, password, context.getConfiguration().getTimeout());
 
 								addLineToConsole("Connection established!");
 
