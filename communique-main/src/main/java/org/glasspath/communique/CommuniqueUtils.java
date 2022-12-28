@@ -3,6 +3,7 @@ package org.glasspath.communique;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.CompletableFuture;
@@ -102,10 +103,6 @@ public class CommuniqueUtils {
 
 	}
 
-	public static Email createEmail(Communique context) {
-		return context.getMainPanel().getEmailEditor().getEmailContainer().toEmail();
-	}
-
 	public static Mailable createMailable(Communique context) {
 		return createMailable(context, null);
 	}
@@ -120,63 +117,17 @@ public class CommuniqueUtils {
 		htmlExporter.parse(email, "cid:"); //$NON-NLS-1$
 
 		Mailable mailable = new Mailable();
-		mailable.setSubject(context.getEmailToolBar().toSubjectTextBox().getText());
-		mailable.setText(htmlExporter.getPlainText());
-		mailable.setHtml(htmlExporter.getHtml());
 		mailable.setTo(MailUtils.parseRecipients(context.getEmailToolBar().getToTextField().getText()));
 		mailable.setCc(MailUtils.parseRecipients(context.getEmailToolBar().getCcTextField().getText()));
 		mailable.setBcc(MailUtils.parseRecipients(context.getEmailToolBar().getBccTextField().getText()));
-
-		return mailable;
-
-	}
-
-	// TODO: Move to MailShareUtils
-	public static org.simplejavamail.api.email.Email createSimpleEmail(Communique context, Account account) throws ShareException {
+		mailable.setSubject(context.getEmailToolBar().toSubjectTextBox().getText());
+		mailable.setText(htmlExporter.getPlainText());
+		mailable.setHtml(htmlExporter.getHtml());
 
 		EmailEditorPanel emailEditor = context.getMainPanel().getEmailEditor();
-		Email email = emailEditor.getEmailContainer().toEmail();
+		if (emailEditor.getMediaCache() != null) {
 
-		HtmlExporter htmlExporter = new HtmlExporter();
-
-		String subject = context.getEmailToolBar().toSubjectTextBox().getText();
-		String html = htmlExporter.toHtml(email, "cid:"); //$NON-NLS-1$
-		String plainText = htmlExporter.getPlainText();
-
-		// TODO
-		String to = context.getEmailToolBar().getToTextField().getText();
-		String cc = context.getEmailToolBar().getCcTextField().getText();
-		String bcc = context.getEmailToolBar().getBccTextField().getText();
-
-		try {
-
-			EmailPopulatingBuilder builder = EmailBuilder.startingBlank()
-					.withHeader("X-Unsent", "1") // Seems to work with outlook, but not with windows mail App..
-					.withHeader("X-Uniform-Type-Identifier", "com.apple.mail-draft") // For apple?
-					.withHeader("X-Mozilla-Draft-Info", "internal/draft; vcard=0; receipt=0; DSN=0; uuencode=0") // Thunderbird?
-					.withSubject(subject)
-					.withPlainText(plainText)
-					.withHTMLText(html);
-
-			if (account != null && account.isValid()) {
-				builder.from(account.getName() != null ? account.getName() : account.getEmail(), account.getEmail());
-			}
-
-			if (to != null && to.length() > 0) {
-				builder.to(to);
-			} else {
-				builder.to("TODO@TODO.TODO");
-			}
-
-			if (cc != null && cc.length() > 0) {
-				builder.cc(cc);
-			}
-
-			if (bcc != null && bcc.length() > 0) {
-				builder.bcc(bcc);
-			}
-
-			if (emailEditor.getMediaCache() != null) {
+			try {
 
 				Content content = new Content();
 				content.setRoot(email);
@@ -193,20 +144,29 @@ public class CommuniqueUtils {
 							out.write(entry.getValue().getBytes());
 						}
 
-						builder.withEmbeddedImage(entry.getKey(), new FileDataSource(imageFile));
+						if (mailable.getImages() == null) {
+							mailable.setImages(new HashMap<String, String>());
+						}
+
+						mailable.getImages().put(entry.getKey(), imageFile.getAbsolutePath());
 
 					}
 
 				}
 
+			} catch (Exception e) {
+				// TODO: Inform user
+				Communique.LOGGER.error("Exception while creating images for mailable", e); //$NON-NLS-1$
 			}
 
-			return builder.buildEmail();
-
-		} catch (Exception e) {
-			throw new ShareException("Could not create simple email", e); //$NON-NLS-1$
 		}
 
+		return mailable;
+
+	}
+
+	public static Email createEmail(Communique context) {
+		return context.getMainPanel().getEmailEditor().getEmailContainer().toEmail();
 	}
 
 	public static boolean sendSmtp(Communique context, SmtpAccount account) {
@@ -237,7 +197,9 @@ public class CommuniqueUtils {
 
 				try {
 
-					org.simplejavamail.api.email.Email simpleEmail = CommuniqueUtils.createSimpleEmail(context, account);
+					Mailable mailable = createMailable(context);
+
+					org.simplejavamail.api.email.Email simpleEmail = MailShareUtils.createSimpleEmail(mailable, account);
 					if (simpleEmail != null) {
 
 						// TODO: Run in thread and show progress dialog
@@ -270,7 +232,9 @@ public class CommuniqueUtils {
 
 		try {
 
-			org.simplejavamail.api.email.Email simpleEmail = CommuniqueUtils.createSimpleEmail(context, context.getAccount());
+			Mailable mailable = createMailable(context);
+
+			org.simplejavamail.api.email.Email simpleEmail = MailShareUtils.createSimpleEmail(mailable, context.getAccount());
 			if (simpleEmail != null) {
 
 				File emlFile = new File(getTempDir(), "draft.eml"); // TODO?
