@@ -301,46 +301,46 @@ public class CommuniqueUtils {
 
 				/*
 				TransportRunner.setListener(new Listener() {
-
+				
 					@Override
 					public void transportSelected(Transport transport) {
-
+				
 						transport.addConnectionListener(new ConnectionListener() {
-
+				
 							@Override
 							public void opened(ConnectionEvent e) {
 								System.out.println("opened");
 							}
-
+				
 							@Override
 							public void disconnected(ConnectionEvent e) {
 								System.out.println("disconnected");
 							}
-
+				
 							@Override
 							public void closed(ConnectionEvent e) {
 								System.out.println("closed");
 							}
 						});
-
+				
 						transport.addTransportListener(new TransportListener() {
-
+				
 							@Override
 							public void messagePartiallyDelivered(TransportEvent e) {
 								System.out.println("messagePartiallyDelivered");
 							}
-
+				
 							@Override
 							public void messageNotDelivered(TransportEvent e) {
 								System.out.println("messageNotDelivered");
 							}
-
+				
 							@Override
 							public void messageDelivered(TransportEvent e) {
 								System.out.println("messageDelivered");
 							}
 						});
-
+				
 					}
 				});
 				*/
@@ -389,30 +389,19 @@ public class CommuniqueUtils {
 
 		Mailable mailable = createMailable(context);
 
-		new Thread(new Runnable() {
+		String mailto = "mailto:" + MailUtils.createRecipientsString(mailable.getTo(), ",");
+		mailto += "?subject=" + mailable.getSubject();
+		// TODO: CC & BCC
+		mailto += "&body=" + mailable.getText();
 
-			@Override
-			public void run() {
+		// TODO?
+		mailto = mailto.replace(" ", "%20");
+		mailto = mailto.replace("\n", "%0D%0A");
 
-				String mailto = "mailto:" + MailUtils.createRecipientsString(mailable.getTo(), ",");
-				mailto += "?subject=" + mailable.getSubject();
-				// TODO: CC & BCC
-				mailto += "&body=" + mailable.getText();
+		// System.out.println("mailto = " + mailto);
 
-				// TODO?
-				mailto = mailto.replace(" ", "%20");
-				mailto = mailto.replace("\n", "%0D%0A");
-
-				// System.out.println("mailto = " + mailto);
-
-				try {
-					DesktopUtils.mail(URI.create(mailto));
-				} catch (Exception e) {
-					Communique.LOGGER.error("Exception while sending mail (mailto): ", e); //$NON-NLS-1$
-				}
-
-			}
-		}).start();
+		// TODO: Catch exception
+		DesktopUtils.mail(URI.create(mailto));
 
 		return true;
 
@@ -422,7 +411,11 @@ public class CommuniqueUtils {
 
 		Mailable mailable = createMailable(context);
 
-		MapiShareUtils.createEmail(mailable);
+		try {
+			MapiShareUtils.createEmail(mailable);
+		} catch (Exception e) {
+			Communique.LOGGER.error("Exception while sharing email through Mapi", e);
+		}
 
 		return false;
 
@@ -432,7 +425,11 @@ public class CommuniqueUtils {
 
 		Mailable mailable = createMailable(context);
 
-		OutlookShareUtils.createEmail(mailable);
+		try {
+			OutlookShareUtils.createEmail(mailable);
+		} catch (Exception e) {
+			Communique.LOGGER.error("Exception while sharing email through Outlook (COM)", e);
+		}
 
 		return false;
 
@@ -442,7 +439,11 @@ public class CommuniqueUtils {
 
 		Mailable mailable = createMailable(context);
 
-		OutlookShareUtils.createCommandLineEmail(mailable, null);
+		try {
+			OutlookShareUtils.createCommandLineEmail(mailable, null);
+		} catch (Exception e) {
+			Communique.LOGGER.error("Exception while sharing email through Outlook (command line)", e);
+		}
 
 		return false;
 
@@ -452,7 +453,11 @@ public class CommuniqueUtils {
 
 		Mailable mailable = createMailable(context);
 
-		ThunderbirdShareUtils.createCommandLineEmail(mailable);
+		try {
+			ThunderbirdShareUtils.createCommandLineEmail(mailable);
+		} catch (Exception e) {
+			Communique.LOGGER.error("Exception while sharing email through Thunderbird (command line)", e);
+		}
 
 		return false;
 
@@ -467,7 +472,11 @@ public class CommuniqueUtils {
 			assemblyResolvePath = OsUtils.getApplicationJarFile(Communique.APPLICATION_CLASS).getParent();
 		}
 
-		UwpShareUtils.showShareMenu(context.getFrame(), mailable, assemblyResolvePath);
+		try {
+			UwpShareUtils.showShareMenu(context.getFrame(), mailable, assemblyResolvePath);
+		} catch (Exception e) {
+			Communique.LOGGER.error("Exception while sharing email through UWP share menu", e);
+		}
 
 		return false;
 
@@ -477,7 +486,11 @@ public class CommuniqueUtils {
 
 		Mailable mailable = createMailable(context);
 
-		AppKitShareUtils.createEmail(mailable);
+		try {
+			AppKitShareUtils.createEmail(mailable);
+		} catch (Exception e) {
+			Communique.LOGGER.error("Exception while sharing email through AppKit", e);
+		}
 
 		return false;
 
