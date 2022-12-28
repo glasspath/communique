@@ -295,7 +295,7 @@ public class CommuniqueUtils {
 
 		try {
 
-			URI mailtoURI = MailShareUtils.createMailtoUri(mailable);
+			URI mailtoURI = MailUtils.createMailtoUri(mailable);
 
 			DesktopUtils.mail(mailtoURI);
 
