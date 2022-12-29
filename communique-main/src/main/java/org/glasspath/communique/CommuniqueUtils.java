@@ -356,7 +356,7 @@ public class CommuniqueUtils {
 
 		try {
 
-			UwpShareUtils.showShareMenu(context.getFrame(), mailable, assemblyResolvePath);
+			UwpShareUtils.showShareMenu(context.getFrame(), mailable, null, assemblyResolvePath);
 
 			return true;
 
