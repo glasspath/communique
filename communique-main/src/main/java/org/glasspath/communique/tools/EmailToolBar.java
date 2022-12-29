@@ -62,6 +62,7 @@ public class EmailToolBar extends JPanel {
 	private final InputTextField bccField;
 	private final JPanel subjectToolBar;
 	private final InputTextBox subjectField;
+	private final AttachmentPanel attachmentPanel;
 
 	public EmailToolBar(Communique context) {
 
@@ -114,8 +115,13 @@ public class EmailToolBar extends JPanel {
 		subjectField = new InputTextBox("Subject:", context.getMainPanel().getEmailEditor());
 		// add(subjectField, new GridBagConstraints(3, 7, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 		subjectToolBar.add(subjectField, BorderLayout.CENTER);
+
+		attachmentPanel = new AttachmentPanel();
+		subjectToolBar.add(attachmentPanel, BorderLayout.SOUTH);
+
 		if (Theme.isDark()) {
 			subjectField.lineColor = new Color(75, 75, 75);
+			attachmentPanel.lineColor = new Color(75, 75, 75);
 		}
 
 	}
