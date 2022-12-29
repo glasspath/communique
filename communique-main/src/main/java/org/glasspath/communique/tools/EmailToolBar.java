@@ -60,7 +60,7 @@ public class EmailToolBar extends JPanel {
 	private final InputTextField toField;
 	private final InputTextField ccField;
 	private final InputTextField bccField;
-	private final JPanel subjectToolBar;
+	private final JPanel contentToolBar;
 	private final InputTextBox subjectField;
 	private final AttachmentPanel attachmentPanel;
 
@@ -108,16 +108,16 @@ public class EmailToolBar extends JPanel {
 		bccField = new InputTextField("BCC:");
 		add(bccField, new GridBagConstraints(3, 5, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 
-		subjectToolBar = new JPanel();
-		subjectToolBar.setOpaque(false);
-		subjectToolBar.setLayout(new BorderLayout());
+		contentToolBar = new JPanel();
+		contentToolBar.setOpaque(false);
+		contentToolBar.setLayout(new BorderLayout());
 
 		subjectField = new InputTextBox("Subject:", context.getMainPanel().getEmailEditor());
 		// add(subjectField, new GridBagConstraints(3, 7, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
-		subjectToolBar.add(subjectField, BorderLayout.CENTER);
+		contentToolBar.add(subjectField, BorderLayout.CENTER);
 
 		attachmentPanel = new AttachmentPanel();
-		subjectToolBar.add(attachmentPanel, BorderLayout.SOUTH);
+		contentToolBar.add(attachmentPanel, BorderLayout.SOUTH);
 
 		if (Theme.isDark()) {
 			subjectField.lineColor = new Color(75, 75, 75);
@@ -138,8 +138,8 @@ public class EmailToolBar extends JPanel {
 		return bccField.textField;
 	}
 
-	public JPanel getSubjectToolBar() {
-		return subjectToolBar;
+	public JPanel getContentToolBar() {
+		return contentToolBar;
 	}
 
 	public void init(Email email) {

@@ -433,7 +433,7 @@ public class Communique implements FrameContext {
 		toolBarPanel.bottom.removeAll();
 
 		toolBarPanel.top.add(emailToolBar);
-		toolBarPanel.bottom.add(emailToolBar.getSubjectToolBar());
+		toolBarPanel.bottom.add(emailToolBar.getContentToolBar());
 
 		if (getEditorContext() != null && !getEditorContext().isEditable()) {
 
@@ -514,7 +514,7 @@ public class Communique implements FrameContext {
 			toolBarContainer.add(middle, BorderLayout.CENTER);
 
 			bottom = new JPanel();
-			bottom.setBorder(BorderFactory.createEmptyBorder(8, 15, 8, 15));
+			bottom.setBorder(BorderFactory.createEmptyBorder(8, 15, 0, 15));
 			bottom.setLayout(new BoxLayout(bottom, BoxLayout.LINE_AXIS));
 			bottom.setBackground(Theme.isDark() ? new Color(48, 50, 52) : Color.white);
 			toolBarContainer.add(bottom, BorderLayout.SOUTH);
