@@ -315,7 +315,7 @@ public class CommuniqueUtils {
 
 		try {
 
-			OutlookShareUtils.createCommandLineEmail(mailable, null);
+			OutlookShareUtils.createCommandLineEmail(mailable);
 
 			return true;
 
