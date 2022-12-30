@@ -137,7 +137,7 @@ public class Communique implements FrameContext {
 		this.editTools = new EditTools(undoActions);
 		this.viewTools = new ViewTools(mainPanel);
 		this.accountTools = new AccountTools(this);
-		this.emailToolBar = new EmailToolBar(this);
+		this.emailToolBar = new EmailToolBar(this, editorContext);
 		this.textFormatTools = new TextFormatTools(mainPanel.getEmailEditor());
 
 		textFormatTools.setFontFamilyNames(Fonts.BASIC_FONT_FAMILIES, Fonts.DEFAULT_BASIC_FONT_FAMILY);
@@ -514,7 +514,7 @@ public class Communique implements FrameContext {
 			toolBarContainer.add(middle, BorderLayout.CENTER);
 
 			bottom = new JPanel();
-			bottom.setBorder(BorderFactory.createEmptyBorder(8, 15, 0, 15));
+			bottom.setBorder(BorderFactory.createEmptyBorder(8, 15, 0, 0));
 			bottom.setLayout(new BoxLayout(bottom, BoxLayout.LINE_AXIS));
 			bottom.setBackground(Theme.isDark() ? new Color(48, 50, 52) : Color.white);
 			toolBarContainer.add(bottom, BorderLayout.SOUTH);

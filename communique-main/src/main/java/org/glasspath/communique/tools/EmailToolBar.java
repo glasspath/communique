@@ -64,7 +64,7 @@ public class EmailToolBar extends JPanel {
 	private final InputTextBox subjectField;
 	private final AttachmentPanel attachmentPanel;
 
-	public EmailToolBar(Communique context) {
+	public EmailToolBar(Communique context, EmailEditorContext editorContext) {
 
 		setOpaque(false);
 
@@ -112,12 +112,17 @@ public class EmailToolBar extends JPanel {
 		contentToolBar.setOpaque(false);
 		contentToolBar.setLayout(new BorderLayout());
 
-		subjectField = new InputTextBox("Subject:", context.getMainPanel().getEmailEditor());
+		subjectField = new InputTextBox("Subject:", 15, context.getMainPanel().getEmailEditor());
 		// add(subjectField, new GridBagConstraints(3, 7, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 		contentToolBar.add(subjectField, BorderLayout.CENTER);
 
-		attachmentPanel = new AttachmentPanel();
+		attachmentPanel = new AttachmentPanel(context);
 		contentToolBar.add(attachmentPanel, BorderLayout.SOUTH);
+		if (editorContext != null && editorContext.getAttachements() != null && editorContext.getAttachements().size() > 0) {
+			attachmentPanel.setAttachments(editorContext.getAttachements());
+		} else {
+			attachmentPanel.setVisible(false);
+		}
 
 		if (Theme.isDark()) {
 			subjectField.lineColor = new Color(75, 75, 75);
@@ -161,13 +166,16 @@ public class EmailToolBar extends JPanel {
 
 	private static abstract class InputField extends JPanel {
 
+		private final int marginRight;
 		protected Color lineColor = Theme.isDark() ? new Color(50, 50, 50) : new Color(225, 225, 225);
 
-		private InputField(String name) {
+		private InputField(String name, int marginRight) {
+
+			this.marginRight = marginRight;
 
 			setOpaque(false);
 			setLayout(new BorderLayout());
-			setBorder(BorderFactory.createEmptyBorder(0, 2, 3, 2));
+			setBorder(BorderFactory.createEmptyBorder(0, 2, 3, 2 + marginRight));
 
 			JLabel nameLabel = new JLabel(name);
 			nameLabel.setForeground(Theme.isDark() ? new Color(150, 150, 150) : new Color(100, 100, 100));
@@ -180,7 +188,7 @@ public class EmailToolBar extends JPanel {
 			super.paint(g);
 
 			g.setColor(lineColor);
-			g.drawLine(0, getHeight() - 2, getWidth(), getHeight() - 2);
+			g.drawLine(0, getHeight() - 2, getWidth() - marginRight, getHeight() - 2);
 
 		}
 
@@ -192,7 +200,7 @@ public class EmailToolBar extends JPanel {
 
 		private InputTextField(String name) {
 
-			super(name);
+			super(name, 0);
 
 			textField = new JTextField();
 			textField.setBackground(ColorUtils.TITLE_BAR_COLOR);
@@ -207,9 +215,9 @@ public class EmailToolBar extends JPanel {
 
 		private final TextBoxView textBoxView;
 
-		private InputTextBox(String name, EmailEditorPanel context) {
+		private InputTextBox(String name, int marginRight, EmailEditorPanel context) {
 
-			super(name);
+			super(name, marginRight);
 
 			lineColor = Theme.isDark() ? new Color(50, 50, 50) : new Color(225, 225, 225);
 

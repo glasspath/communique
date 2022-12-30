@@ -22,48 +22,138 @@
  */
 package org.glasspath.communique.tools;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Insets;
-import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import org.glasspath.common.swing.DesktopUtils;
 import org.glasspath.common.swing.button.SplitButton;
 import org.glasspath.common.swing.color.ColorUtils;
 import org.glasspath.common.swing.theme.Theme;
+import org.glasspath.communique.Communique;
 import org.glasspath.communique.icons.Icons;
 
 import com.lowagie.text.Font;
 
 public class AttachmentPanel extends JPanel {
 
-	private final List<File> attachments = new ArrayList<>();
+	public static final int TOP_BORDER = 3;
+	public static final int MIN_BUTTON_HEIGHT = 35;
+	public static final int SPACING = 2;
+	public static final int BOTTOM_BORDER = 7;
+
+	private final Communique context;
+	private final List<File> attachments;
+	private final AttachmentsContainer container;
+
+	private int buttonHeight = 0;
+	private int rowCount = 0;
 	protected Color lineColor = Theme.isDark() ? new Color(50, 50, 50) : new Color(225, 225, 225);
 
-	public AttachmentPanel() {
+	public AttachmentPanel(Communique context) {
+
+		this.context = context;
 
 		setOpaque(false);
-		setPreferredSize(new Dimension(100, 50));
+		setBorder(BorderFactory.createEmptyBorder(TOP_BORDER, 0, BOTTOM_BORDER, 0));
+		setLayout(new BorderLayout());
 
-		// TODO
-		attachments.add(new File("C:\\project\\administratie\\facturen\\aerialist\\22018.pdf"));
+		attachments = new ArrayList<>();
+		container = new AttachmentsContainer();
 
-		setLayout(null);
+		JScrollPane scrollPane = new JScrollPane(container);
+		scrollPane.setOpaque(false);
+		scrollPane.getViewport().setOpaque(false);
+		scrollPane.setBorder(BorderFactory.createEmptyBorder());
+		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		add(scrollPane, BorderLayout.CENTER);
 
-		AttachmentButton attachmentButton = new AttachmentButton(attachments.get(0));
-		attachmentButton.setBounds(2, 6, 125, 35);
-		add(attachmentButton);
+	}
+
+	@Override
+	public Dimension getPreferredSize() {
+
+		Dimension size = super.getPreferredSize();
+
+		if (rowCount > 0 && buttonHeight > 0) {
+
+			if (rowCount == 1) {
+				size.height = TOP_BORDER + buttonHeight + BOTTOM_BORDER;
+			} else if (rowCount == 2) {
+				size.height = TOP_BORDER + buttonHeight + SPACING + buttonHeight + BOTTOM_BORDER;
+			} else {
+				size.height = TOP_BORDER + buttonHeight + SPACING + (int) (buttonHeight * 1.5) + BOTTOM_BORDER;
+			}
+
+		} else {
+			size.height = TOP_BORDER + MIN_BUTTON_HEIGHT + BOTTOM_BORDER;
+		}
+
+		return size;
+
+	}
+
+	public void setAttachments(List<File> attachments) {
+
+		this.attachments.clear();
+		this.attachments.addAll(attachments);
+
+		container.removeAll();
+		for (File attachment : attachments) {
+			container.add(new AttachmentButton(attachment));
+		}
+
+	}
+
+	public void addAttachment(File attachment) {
+		attachments.add(attachment);
+		container.add(new AttachmentButton(attachment));
+	}
+
+	public void removeAttachment(File attachment) {
+
+		int index = attachments.indexOf(attachment);
+		if (index >= 0) {
+
+			attachments.remove(index);
+			container.remove(index);
+
+		}
+
+	}
+
+	public void refresh() {
+
+		if (isVisible() && attachments.size() == 0) {
+			setVisible(false);
+		} else if (!isVisible() && attachments.size() > 0) {
+			setVisible(true);
+		}
+
+		// TODO: When refreshing after removing attachments the complete frame sometimes
+		// needs to update it's layout, this was the only way to get it working..
+		// Is there a better way?
+
+		container.invalidate();
+		container.validate();
+
+		context.getFrame().invalidate();
+		context.getFrame().validate();
+		context.getFrame().repaint();
 
 	}
 
@@ -72,7 +162,82 @@ public class AttachmentPanel extends JPanel {
 		super.paint(g);
 
 		g.setColor(lineColor);
-		g.drawLine(0, getHeight() - 2, getWidth(), getHeight() - 2);
+		g.drawLine(0, getHeight() - 2, getWidth() - 15, getHeight() - 2);
+
+	}
+
+	private class AttachmentsContainer extends JPanel {
+
+		private final Dimension preferredSize = new Dimension();
+
+		public AttachmentsContainer() {
+
+			setOpaque(false);
+			setLayout(null);
+
+		}
+
+		@Override
+		public void doLayout() {
+			super.doLayout();
+
+			buttonHeight = 0;
+			rowCount = 1;
+
+			preferredSize.width = AttachmentPanel.this.getWidth() - 25;
+			preferredSize.height = MIN_BUTTON_HEIGHT;
+
+			int x = 0;
+			int y = 0;
+			int w = 0;
+
+			for (int i = 0; i < getComponentCount(); i++) {
+
+				Component component = getComponent(i);
+				Dimension size = component.getPreferredSize();
+
+				w = size.width;
+				if (w < 100) {
+					w = 100;
+				} else if (w > 200) {
+					w = 200;
+				}
+
+				if (buttonHeight == 0) {
+
+					buttonHeight = size.height;
+					if (buttonHeight < MIN_BUTTON_HEIGHT) {
+						buttonHeight = MIN_BUTTON_HEIGHT;
+					}
+
+				}
+
+				// Go to next row
+				if (x > 0 && x + w > preferredSize.width && buttonHeight > 0) {
+
+					x = 0;
+					y += buttonHeight + SPACING;
+
+					rowCount++;
+
+				}
+
+				component.setBounds(x, y, w, buttonHeight);
+
+				if (y + buttonHeight > preferredSize.height) {
+					preferredSize.height = y + buttonHeight;
+				}
+
+				x += w + SPACING;
+
+			}
+
+		}
+
+		@Override
+		public Dimension getPreferredSize() {
+			return preferredSize;
+		}
 
 	}
 
@@ -86,11 +251,10 @@ public class AttachmentPanel extends JPanel {
 			setFocusable(false);
 			setArrowMode(SplitButton.ARROW_MODE_HOVER);
 			setHorizontalAlignment(SplitButton.LEFT);
-			setMargin(new Insets(0, 4, 0, 0));
+			setMargin(new Insets(4, 4, 4, 4));
 			setSplitWidth(22);
 			setArrowOffset(-4);
 			setAlwaysDropDown(true);
-			// setPopupRightAligned(true);
 
 			setText(attachment.getName());
 			setIcon(Icons.attachmentImage);
@@ -126,7 +290,8 @@ public class AttachmentPanel extends JPanel {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					// TODO
+					removeAttachment(attachment);
+					refresh();
 				}
 			});
 
