@@ -14,12 +14,10 @@ import org.glasspath.aerialist.HtmlExporter;
 import org.glasspath.aerialist.media.MediaCache.ImageResource;
 import org.glasspath.common.GlasspathSystemProperties;
 import org.glasspath.common.os.OsUtils;
-import org.glasspath.common.share.ShareException;
 import org.glasspath.common.share.appkit.AppKitShareUtils;
 import org.glasspath.common.share.mail.MailShareUtils;
 import org.glasspath.common.share.mail.MailUtils;
 import org.glasspath.common.share.mail.Mailable;
-import org.glasspath.common.share.mail.account.Account;
 import org.glasspath.common.share.mail.account.SmtpAccount;
 import org.glasspath.common.share.mapi.MapiShareUtils;
 import org.glasspath.common.share.outlook.OutlookShareUtils;
@@ -31,10 +29,6 @@ import org.glasspath.common.xml.XmlUtils;
 import org.glasspath.communique.account.AccountLoginDialog;
 import org.glasspath.communique.account.SmtpAccountFinderDialog;
 import org.glasspath.communique.editor.EmailEditorPanel;
-import org.simplejavamail.api.email.EmailPopulatingBuilder;
-import org.simplejavamail.email.EmailBuilder;
-
-import jakarta.activation.FileDataSource;
 
 public class CommuniqueUtils {
 
