@@ -293,13 +293,13 @@ public class AttachmentsPanel extends JPanel {
 				}
 			});
 
-			JMenuItem openFileLocationMenuItem = new JMenuItem("Open file location");
+			JMenuItem openFileLocationMenuItem = new JMenuItem("Open File location");
 			menu.add(openFileLocationMenuItem);
 			openFileLocationMenuItem.addActionListener(new ActionListener() {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					// TODO
+					DesktopUtils.open(attachment.getParent());
 				}
 			});
 
