@@ -34,7 +34,7 @@ public class CommuniqueUtils {
 
 	public static File getTempDir() {
 
-		File tempDir = new File(System.getProperty("user.home") + "/.revenue/temp"); //$NON-NLS-1$ //$NON-NLS-2$
+		File tempDir = new File(System.getProperty("user.home") + "/.communique/temp"); //$NON-NLS-1$ //$NON-NLS-2$
 
 		if (!tempDir.exists()) {
 			try {
