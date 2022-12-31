@@ -40,6 +40,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import org.glasspath.common.share.ShareUtils;
 import org.glasspath.common.swing.DesktopUtils;
 import org.glasspath.common.swing.button.SplitButton;
 import org.glasspath.common.swing.color.ColorUtils;
@@ -49,7 +50,7 @@ import org.glasspath.communique.icons.Icons;
 
 import com.lowagie.text.Font;
 
-public class AttachmentPanel extends JPanel {
+public class AttachmentsPanel extends JPanel {
 
 	public static final int TOP_BORDER = 3;
 	public static final int MIN_BUTTON_HEIGHT = 35;
@@ -64,7 +65,7 @@ public class AttachmentPanel extends JPanel {
 	private int rowCount = 0;
 	protected Color lineColor = Theme.isDark() ? new Color(50, 50, 50) : new Color(225, 225, 225);
 
-	public AttachmentPanel(Communique context) {
+	public AttachmentsPanel(Communique context) {
 
 		this.context = context;
 
@@ -107,6 +108,10 @@ public class AttachmentPanel extends JPanel {
 
 	}
 
+	public List<File> getAttachments() {
+		return attachments;
+	}
+
 	public void setAttachments(List<File> attachments) {
 
 		this.attachments.clear();
@@ -120,8 +125,12 @@ public class AttachmentPanel extends JPanel {
 	}
 
 	public void addAttachment(File attachment) {
-		attachments.add(attachment);
-		container.add(new AttachmentButton(attachment));
+
+		if (!attachments.contains(attachment)) {
+			attachments.add(attachment);
+			container.add(new AttachmentButton(attachment));
+		}
+
 	}
 
 	public void removeAttachment(File attachment) {
@@ -134,6 +143,11 @@ public class AttachmentPanel extends JPanel {
 
 		}
 
+	}
+
+	public void removeAllAttachments() {
+		attachments.clear();
+		container.removeAll();
 	}
 
 	public void refresh() {
@@ -184,7 +198,7 @@ public class AttachmentPanel extends JPanel {
 			buttonHeight = 0;
 			rowCount = 1;
 
-			preferredSize.width = AttachmentPanel.this.getWidth() - 25;
+			preferredSize.width = AttachmentsPanel.this.getWidth() - 25;
 			preferredSize.height = MIN_BUTTON_HEIGHT;
 
 			int x = 0;
@@ -257,7 +271,15 @@ public class AttachmentPanel extends JPanel {
 			setAlwaysDropDown(true);
 
 			setText(attachment.getName());
-			setIcon(Icons.attachmentImage);
+			if (ShareUtils.isPdfFile(attachment)) {
+				setIcon(Icons.attachmentFileDocumentOutline);
+			} else if (ShareUtils.isImageFile(attachment)) {
+				setIcon(Icons.attachmentImage);
+			} else if (ShareUtils.isVideoFile(attachment)) {
+				setIcon(Icons.attachmentMovie);
+			} else {
+				setIcon(Icons.attachmentFileOutline);
+			}
 
 			JMenu menu = new JMenu();
 

@@ -62,7 +62,7 @@ public class EmailToolBar extends JPanel {
 	private final InputTextField bccField;
 	private final JPanel contentToolBar;
 	private final InputTextBox subjectField;
-	private final AttachmentPanel attachmentPanel;
+	private final AttachmentsPanel attachmentsPanel;
 
 	public EmailToolBar(Communique context, EmailEditorContext editorContext) {
 
@@ -116,17 +116,17 @@ public class EmailToolBar extends JPanel {
 		// add(subjectField, new GridBagConstraints(3, 7, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 		contentToolBar.add(subjectField, BorderLayout.CENTER);
 
-		attachmentPanel = new AttachmentPanel(context);
-		contentToolBar.add(attachmentPanel, BorderLayout.SOUTH);
+		attachmentsPanel = new AttachmentsPanel(context);
+		contentToolBar.add(attachmentsPanel, BorderLayout.SOUTH);
 		if (editorContext != null && editorContext.getAttachements() != null && editorContext.getAttachements().size() > 0) {
-			attachmentPanel.setAttachments(editorContext.getAttachements());
+			attachmentsPanel.setAttachments(editorContext.getAttachements());
 		} else {
-			attachmentPanel.setVisible(false);
+			attachmentsPanel.setVisible(false);
 		}
 
 		if (Theme.isDark()) {
 			subjectField.lineColor = new Color(75, 75, 75);
-			attachmentPanel.lineColor = new Color(75, 75, 75);
+			attachmentsPanel.lineColor = new Color(75, 75, 75);
 		}
 
 	}
@@ -145,6 +145,10 @@ public class EmailToolBar extends JPanel {
 
 	public JPanel getContentToolBar() {
 		return contentToolBar;
+	}
+
+	public AttachmentsPanel getAttachmentsPanel() {
+		return attachmentsPanel;
 	}
 
 	public void init(Email email) {

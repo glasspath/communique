@@ -53,12 +53,18 @@ public class Icons {
 		appIcon.add(new ImageIcon(CLASS_LOADER.getResource("org/glasspath/communique/icons/48x48/app_icon.png")).getImage());
 	}
 
+	public static final SvgIcon attachmentFileDocumentOutline = new SvgIcon(24, 0, getSvg("file-document-outline.svg"));
+	public static final SvgIcon attachmentFileOutline = new SvgIcon(24, 0, getSvg("file-outline.svg"));
 	public static final SvgIcon attachmentImage = new SvgIcon(24, 0, getSvg("image.svg"));
+	public static final SvgIcon attachmentMovie = new SvgIcon(24, 0, getSvg("movie.svg"));
 
-	public static final SvgIcon accountOutline = new SvgIcon(16, 0, getSvg("account-outline.svg"));
+	public static final SvgIcon accountOutline = new SvgIcon(getSvg("account-outline.svg"));
+	public static final SvgIcon paperclip = new SvgIcon(getSvg("paperclip.svg"));
 
 	static {
+		attachmentFileDocumentOutline.setColorFilter(SvgIcon.RED);
 		attachmentImage.setColorFilter(SvgIcon.BLUE);
+		attachmentMovie.setColorFilter(SvgIcon.BLUE);
 	}
 
 }

@@ -161,6 +161,10 @@ public class CommuniqueUtils {
 
 		}
 
+		for (File attachment : context.getEmailToolBar().getAttachmentsPanel().getAttachments()) {
+			mailable.addAttachment(attachment.getAbsolutePath());
+		}
+
 		return mailable;
 
 	}
