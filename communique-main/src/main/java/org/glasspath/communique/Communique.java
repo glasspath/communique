@@ -69,7 +69,7 @@ import org.glasspath.communique.editor.EmailEditorContext;
 import org.glasspath.communique.editor.EmailEditorPanel;
 import org.glasspath.communique.icons.Icons;
 import org.glasspath.communique.tools.AccountTools;
-import org.glasspath.communique.tools.AttachmentsTools;
+import org.glasspath.communique.tools.InsertTools;
 import org.glasspath.communique.tools.EmailToolBar;
 import org.glasspath.communique.tools.FileTools;
 import org.slf4j.Logger;
@@ -116,7 +116,7 @@ public class Communique implements FrameContext {
 	private final StatusBar statusBar;
 	private final FileTools fileTools;
 	private final EditTools editTools;
-	private final AttachmentsTools attachmentsTools;
+	private final InsertTools insertTools;
 	private final ViewTools viewTools;
 	private final AccountTools accountTools;
 	private final EmailToolBar emailToolBar;
@@ -137,7 +137,7 @@ public class Communique implements FrameContext {
 		this.statusBar = new StatusBar();
 		this.fileTools = new FileTools(this);
 		this.editTools = new EditTools(undoActions);
-		this.attachmentsTools = new AttachmentsTools(this);
+		this.insertTools = new InsertTools(this);
 		this.viewTools = new ViewTools(mainPanel);
 		this.accountTools = new AccountTools(this);
 		this.emailToolBar = new EmailToolBar(this, editorContext);
@@ -166,7 +166,7 @@ public class Communique implements FrameContext {
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.add(fileTools.getMenu());
 		menuBar.add(editTools.getMenu());
-		menuBar.add(attachmentsTools.getMenu());
+		menuBar.add(insertTools.getMenu());
 		menuBar.add(accountTools.getMenu());
 		// menuBar.add(formatTools.getMenu()); // TODO?
 		frame.setJMenuBar(menuBar);
@@ -449,7 +449,7 @@ public class Communique implements FrameContext {
 
 			toolBarPanel.middle.add(fileTools.getToolBar());
 			toolBarPanel.middle.add(editTools.getToolBar());
-			toolBarPanel.middle.add(attachmentsTools.getToolBar());
+			toolBarPanel.middle.add(insertTools.getToolBar());
 			toolBarPanel.middle.add(textFormatTools.getToolBar());
 			if (toolBars != null) {
 				for (JToolBar toolBar : toolBars) {

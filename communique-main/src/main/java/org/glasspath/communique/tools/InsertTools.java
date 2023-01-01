@@ -31,29 +31,38 @@ import javax.swing.JMenuItem;
 import javax.swing.JToolBar;
 
 import org.glasspath.aerialist.Aerialist;
+import org.glasspath.aerialist.editor.actions.ActionUtils;
 import org.glasspath.common.swing.button.SplitButton;
 import org.glasspath.common.swing.color.ColorUtils;
 import org.glasspath.common.swing.file.chooser.FileChooser;
 import org.glasspath.communique.Communique;
 import org.glasspath.communique.icons.Icons;
 
-public class AttachmentsTools {
+public class InsertTools {
 
 	private final Communique context;
 
 	private final JMenu menu;
 	private final JToolBar toolBar;
 
-	public AttachmentsTools(Communique context) {
+	public InsertTools(Communique context) {
 
 		this.context = context;
 
-		this.menu = createMenu();
-		this.toolBar = new JToolBar("Attachments");
+		this.menu = new JMenu("Insert");
+		this.toolBar = new JToolBar("Insert");
 		toolBar.setRollover(true);
 		toolBar.setBackground(ColorUtils.TITLE_BAR_COLOR);
 
-		JMenu attachButtonMenu = createMenu();
+		menu.add(createAttachFileMenuItem());
+		menu.add(ActionUtils.createInsertImageMenuItem(context.getMainPanel().getEmailEditor(), null));
+		menu.addSeparator();
+		menu.add(createRemoveAllMenuItem());
+
+		JMenu attachButtonMenu = new JMenu("Insert");
+		attachButtonMenu.add(createAttachFileMenuItem());
+		attachButtonMenu.addSeparator();
+		attachButtonMenu.add(createRemoveAllMenuItem());
 
 		SplitButton attachButton = new SplitButton();
 		attachButton.setIcon(Icons.paperclip);
@@ -74,13 +83,10 @@ public class AttachmentsTools {
 
 	}
 
-	private JMenu createMenu() {
-
-		JMenu menu = new JMenu("Attachments");
+	private JMenuItem createAttachFileMenuItem() {
 
 		JMenuItem attachFileMenuItem = new JMenuItem("Attach File");
 		attachFileMenuItem.setIcon(Icons.paperclip);
-		menu.add(attachFileMenuItem);
 		attachFileMenuItem.addActionListener(new ActionListener() {
 
 			@Override
@@ -89,11 +95,14 @@ public class AttachmentsTools {
 			}
 		});
 
-		menu.addSeparator();
+		return attachFileMenuItem;
+
+	}
+
+	private JMenuItem createRemoveAllMenuItem() {
 
 		JMenuItem removeAllMenuItem = new JMenuItem("Remove All");
 		removeAllMenuItem.setIcon(org.glasspath.common.icons.Icons.closeRed);
-		menu.add(removeAllMenuItem);
 		removeAllMenuItem.addActionListener(new ActionListener() {
 
 			@Override
@@ -103,7 +112,7 @@ public class AttachmentsTools {
 			}
 		});
 
-		return menu;
+		return removeAllMenuItem;
 
 	}
 

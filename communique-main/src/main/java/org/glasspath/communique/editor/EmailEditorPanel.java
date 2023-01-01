@@ -287,6 +287,9 @@ public class EmailEditorPanel extends EditorPanel<EmailEditorPanel> {
 				}
 			});
 
+			// TODO?
+			setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+
 		}
 
 		@Override
