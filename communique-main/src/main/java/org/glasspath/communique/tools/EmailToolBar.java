@@ -170,7 +170,7 @@ public class EmailToolBar extends JPanel {
 		if (email.getTo() != null) {
 			to = email.getTo();
 		}
-to = "test@test.nl";
+
 		if (email.getCc() != null) {
 			cc = email.getCc();
 		}
