@@ -57,12 +57,12 @@ public class InsertTools {
 		menu.add(createAttachFileMenuItem());
 		menu.add(ActionUtils.createInsertImageMenuItem(context.getMainPanel().getEmailEditor(), null));
 		menu.addSeparator();
-		menu.add(createRemoveAllMenuItem());
+		menu.add(createRemoveAllMenuItem("Remove all attachments"));
 
 		JMenu attachButtonMenu = new JMenu("Insert");
 		attachButtonMenu.add(createAttachFileMenuItem());
 		attachButtonMenu.addSeparator();
-		attachButtonMenu.add(createRemoveAllMenuItem());
+		attachButtonMenu.add(createRemoveAllMenuItem("Remove All"));
 
 		SplitButton attachButton = new SplitButton();
 		attachButton.setIcon(Icons.paperclip);
@@ -99,9 +99,9 @@ public class InsertTools {
 
 	}
 
-	private JMenuItem createRemoveAllMenuItem() {
+	private JMenuItem createRemoveAllMenuItem(String text) {
 
-		JMenuItem removeAllMenuItem = new JMenuItem("Remove All");
+		JMenuItem removeAllMenuItem = new JMenuItem(text);
 		removeAllMenuItem.setIcon(org.glasspath.common.icons.Icons.closeRed);
 		removeAllMenuItem.addActionListener(new ActionListener() {
 
