@@ -170,7 +170,7 @@ public class EmailToolBar extends JPanel {
 		if (email.getTo() != null) {
 			to = email.getTo();
 		}
-
+to = "test@test.nl";
 		if (email.getCc() != null) {
 			cc = email.getCc();
 		}
@@ -296,7 +296,7 @@ public class EmailToolBar extends JPanel {
 								Rectangle2D bounds = fontMetrics.getStringBounds(s, g2d);
 								LineMetrics lineMetrics = fontMetrics.getLineMetrics(s, g2d);
 
-								RoundRectangle2D roundRect = new RoundRectangle2D.Double(x - 0.5, getHeight() - lineMetrics.getHeight() - lineMetrics.getDescent() + (lineMetrics.getHeight() - lineMetrics.getAscent()) - 1, bounds.getWidth() + 1, lineMetrics.getAscent() + 2, 6, 6);
+								RoundRectangle2D roundRect = new RoundRectangle2D.Double(x - 0.5, getBaseline(getWidth(), getHeight()) - lineMetrics.getAscent(), bounds.getWidth() + 1, lineMetrics.getAscent() + lineMetrics.getDescent() + 1, 6, 6);
 								g2d.setColor(Theme.isDark() ? new Color(250, 250, 250, 25) : new Color(0, 0, 0, 25));
 								g2d.fill(roundRect);
 
