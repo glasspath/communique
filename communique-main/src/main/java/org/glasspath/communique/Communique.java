@@ -105,6 +105,7 @@ public class Communique implements FrameContext {
 	public static final int SEND_MODE_WINDOWS_UWP_SHARE_MENU = 23;
 	public static final int SEND_MODE_MAC_APP_KIT_SHARING_SERVICE = 30;
 	public static final int SEND_MODE_THUNDERBIRD_COMMAND_LINE = 40;
+	public static final int SEND_MODE_GMAIL_MAILTO = 50;
 
 	public static Preferences PREFERENCES = Preferences.userNodeForPackage(Communique.class);
 
@@ -308,6 +309,10 @@ public class Communique implements FrameContext {
 
 		case SEND_MODE_MAILTO:
 			CommuniqueUtils.sendMailto(this);
+			break;
+
+		case SEND_MODE_GMAIL_MAILTO:
+			CommuniqueUtils.sendGmailMailto(this);
 			break;
 
 		case SEND_MODE_WINDOWS_MAPI:

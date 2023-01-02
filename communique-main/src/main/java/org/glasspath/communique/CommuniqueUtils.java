@@ -271,6 +271,26 @@ public class CommuniqueUtils {
 
 	}
 
+	public static boolean sendGmailMailto(Communique context) {
+
+		Mailable mailable = createMailable(context);
+
+		try {
+
+			URI gmailMailtoURI = MailUtils.createGmailMailtoUri(mailable);
+
+			DesktopUtils.browse(gmailMailtoURI);
+
+			return true;
+
+		} catch (Exception e) {
+			Communique.LOGGER.error("Exception while sharing email through gmail mailto", e); //$NON-NLS-1$
+		}
+
+		return false;
+
+	}
+
 	public static boolean sendMapi(Communique context) {
 
 		Mailable mailable = createMailable(context);
