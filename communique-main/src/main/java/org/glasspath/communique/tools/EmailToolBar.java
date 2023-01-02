@@ -25,14 +25,20 @@ package org.glasspath.communique.tools;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Rectangle2D;
+import java.awt.geom.RoundRectangle2D;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -42,6 +48,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import org.glasspath.aerialist.AerialistUtils;
 import org.glasspath.aerialist.Email;
@@ -49,6 +57,7 @@ import org.glasspath.aerialist.TextBox;
 import org.glasspath.aerialist.editor.actions.ActionUtils;
 import org.glasspath.aerialist.icons.Icons;
 import org.glasspath.aerialist.swing.view.TextBoxView;
+import org.glasspath.common.share.mail.MailUtils;
 import org.glasspath.common.swing.color.ColorUtils;
 import org.glasspath.common.swing.theme.Theme;
 import org.glasspath.communique.Communique;
@@ -57,14 +66,17 @@ import org.glasspath.communique.editor.EmailEditorPanel;
 
 public class EmailToolBar extends JPanel {
 
-	private final InputTextField toField;
-	private final InputTextField ccField;
-	private final InputTextField bccField;
+	private final EmailEditorContext editorContext;
+	private final RecipientsTextField toField;
+	private final RecipientsTextField ccField;
+	private final RecipientsTextField bccField;
 	private final JPanel contentToolBar;
 	private final InputTextBox subjectField;
 	private final AttachmentsPanel attachmentsPanel;
 
 	public EmailToolBar(Communique context, EmailEditorContext editorContext) {
+
+		this.editorContext = editorContext;
 
 		setOpaque(false);
 
@@ -97,15 +109,13 @@ public class EmailToolBar extends JPanel {
 
 		}
 
-		toField = new InputTextField("To:");
+		toField = new RecipientsTextField("To:");
 		add(toField, new GridBagConstraints(3, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
-		// toField.textField.setText("remco_poelstra@hotmail.com"); // TODO
-		toField.textField.setText("remco@poelstrabesturingen.nl"); // TODO
 
-		ccField = new InputTextField("CC:");
+		ccField = new RecipientsTextField("CC:");
 		add(ccField, new GridBagConstraints(3, 3, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 
-		bccField = new InputTextField("BCC:");
+		bccField = new RecipientsTextField("BCC:");
 		add(bccField, new GridBagConstraints(3, 5, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 
 		contentToolBar = new JPanel();
@@ -113,7 +123,6 @@ public class EmailToolBar extends JPanel {
 		contentToolBar.setLayout(new BorderLayout());
 
 		subjectField = new InputTextBox("Subject:", 15, context.getMainPanel().getEmailEditor());
-		// add(subjectField, new GridBagConstraints(3, 7, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 		contentToolBar.add(subjectField, BorderLayout.CENTER);
 
 		attachmentsPanel = new AttachmentsPanel(context);
@@ -152,6 +161,54 @@ public class EmailToolBar extends JPanel {
 	}
 
 	public void init(Email email) {
+
+		String to = "";
+		String cc = "";
+		String bcc = "";
+
+		if (email.getTo() != null) {
+			to = email.getTo();
+		}
+
+		if (email.getCc() != null) {
+			cc = email.getCc();
+		}
+
+		if (email.getBcc() != null) {
+			bcc = email.getBcc();
+		}
+
+		if (editorContext != null) {
+
+			if (editorContext.getTo() != null) {
+				if (to.length() > 0 && !to.endsWith("; ")) {
+					to += "; " + MailUtils.createElementsString(editorContext.getTo(), "; ");
+				} else {
+					to += MailUtils.createElementsString(editorContext.getTo(), "; ");
+				}
+			}
+
+			if (editorContext.getCc() != null) {
+				if (cc.length() > 0 && !cc.endsWith("; ")) {
+					cc += "; " + MailUtils.createElementsString(editorContext.getCc(), "; ");
+				} else {
+					cc += MailUtils.createElementsString(editorContext.getCc(), "; ");
+				}
+			}
+
+			if (editorContext.getBcc() != null) {
+				if (bcc.length() > 0 && !bcc.endsWith("; ")) {
+					bcc += "; " + MailUtils.createElementsString(editorContext.getBcc(), "; ");
+				} else {
+					bcc += MailUtils.createElementsString(editorContext.getBcc(), "; ");
+				}
+			}
+
+		}
+
+		toField.textField.setText(to);
+		ccField.textField.setText(cc);
+		bccField.textField.setText(bcc);
 
 		if (email.getSubjectTextBox() != null) {
 			subjectField.textBoxView.init(email.getSubjectTextBox());
@@ -198,18 +255,87 @@ public class EmailToolBar extends JPanel {
 
 	}
 
-	private static class InputTextField extends InputField {
+	private static class RecipientsTextField extends InputField {
+
+		private static final int MARGIN_RIGHT = 10;
 
 		private final JTextField textField;
+		private List<String> recipients = null;
 
-		private InputTextField(String name) {
+		private RecipientsTextField(String name) {
 
 			super(name, 0);
 
-			textField = new JTextField();
-			textField.setBackground(ColorUtils.TITLE_BAR_COLOR);
-			textField.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
+			textField = new JTextField() {
+
+				@Override
+				public void paint(Graphics g) {
+
+					Graphics2D g2d = (Graphics2D) g;
+					g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+					g2d.setColor(ColorUtils.TITLE_BAR_COLOR);
+					g2d.fillRect(0, 0, getWidth(), getHeight());
+
+					if (recipients != null) {
+
+						String text = getText();
+
+						for (String recipient : recipients) {
+
+							int i = text.indexOf(recipient);
+							if (i >= 0) {
+
+								FontMetrics fontMetrics = g2d.getFontMetrics();
+
+								double x = MARGIN_RIGHT + fontMetrics.getStringBounds(text.substring(0, i), g2d).getWidth();
+
+								Rectangle2D bounds = fontMetrics.getStringBounds(recipient, g2d);
+
+								RoundRectangle2D roundRect = new RoundRectangle2D.Double(x - 0.5, getHeight() - bounds.getHeight() - fontMetrics.getDescent() + 1, bounds.getWidth() + 1, bounds.getHeight(), 6, 6);
+								g2d.setColor(Theme.isDark() ? new Color(250, 250, 250, 25) : new Color(0, 0, 0, 25));
+								g2d.fill(roundRect);
+
+							}
+
+						}
+
+					}
+
+					super.paint(g);
+
+				}
+			};
+			textField.setOpaque(false);
+			textField.setBorder(BorderFactory.createEmptyBorder(0, MARGIN_RIGHT, 0, 0));
 			add(textField, BorderLayout.CENTER);
+			textField.getDocument().addDocumentListener(new DocumentListener() {
+
+				@Override
+				public void removeUpdate(DocumentEvent e) {
+					update();
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent e) {
+					update();
+				}
+
+				@Override
+				public void changedUpdate(DocumentEvent e) {
+					update();
+				}
+
+				private void update() {
+					SwingUtilities.invokeLater(new Runnable() {
+
+						@Override
+						public void run() {
+							recipients = MailUtils.parseRecipients(textField.getText());
+						}
+					});
+				}
+			});
 
 		}
 

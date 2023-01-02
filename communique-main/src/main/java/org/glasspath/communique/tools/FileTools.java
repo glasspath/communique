@@ -350,6 +350,9 @@ public class FileTools {
 		xDoc.setContent(content);
 
 		Email email = editor.getEmailContainer().toEmail();
+		email.setTo(context.getEmailToolBar().getToTextField().getText());
+		email.setCc(context.getEmailToolBar().getCcTextField().getText());
+		email.setBcc(context.getEmailToolBar().getBccTextField().getText());
 		email.setSubjectTextBox(context.getEmailToolBar().toSubjectTextBox());
 		content.setRoot(email);
 

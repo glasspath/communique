@@ -30,6 +30,9 @@ import org.glasspath.aerialist.editor.EditorContext;
 public abstract class EmailEditorContext extends EditorContext<EmailEditorPanel> {
 
 	private boolean sendButtonVisible = true;
+	private List<String> to = null;
+	private List<String> cc = null;
+	private List<String> bcc = null;
 	private List<File> attachements = null;
 
 	public EmailEditorContext() {
@@ -42,6 +45,30 @@ public abstract class EmailEditorContext extends EditorContext<EmailEditorPanel>
 
 	public void setSendButtonVisible(boolean sendButtonVisible) {
 		this.sendButtonVisible = sendButtonVisible;
+	}
+
+	public List<String> getTo() {
+		return to;
+	}
+
+	public void setTo(List<String> to) {
+		this.to = to;
+	}
+
+	public List<String> getCc() {
+		return cc;
+	}
+
+	public void setCc(List<String> cc) {
+		this.cc = cc;
+	}
+
+	public List<String> getBcc() {
+		return bcc;
+	}
+
+	public void setBcc(List<String> bcc) {
+		this.bcc = bcc;
 	}
 
 	public List<File> getAttachements() {
