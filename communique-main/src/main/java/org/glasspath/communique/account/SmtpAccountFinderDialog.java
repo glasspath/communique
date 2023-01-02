@@ -1,5 +1,5 @@
 /*
- * This file is part of Glasspath Common.
+ * This file is part of Glasspath Communique.
  * Copyright (C) 2011 - 2022 Remco Poelstra
  * Authors: Remco Poelstra
  * 

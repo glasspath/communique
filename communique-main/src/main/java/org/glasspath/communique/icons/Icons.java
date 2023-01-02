@@ -58,13 +58,22 @@ public class Icons {
 	public static final SvgIcon attachmentImage = new SvgIcon(24, 0, getSvg("image.svg"));
 	public static final SvgIcon attachmentMovie = new SvgIcon(24, 0, getSvg("movie.svg"));
 
+	public static final SvgIcon accountMultipleBlueXLarge = new SvgIcon(36, 0, getSvg("account-multiple.svg"));
 	public static final SvgIcon accountOutline = new SvgIcon(getSvg("account-outline.svg"));
+	public static final SvgIcon emailOutlineBlueXLarge = new SvgIcon(30, 0, getSvg("email-outline.svg"));
+	public static final SvgIcon emailOutlineWhiteXLarge = new SvgIcon(30, 0, getSvg("email-outline.svg"));
 	public static final SvgIcon paperclip = new SvgIcon(getSvg("paperclip.svg"));
 
 	static {
+
 		attachmentFileDocumentOutline.setColorFilter(SvgIcon.RED);
 		attachmentImage.setColorFilter(SvgIcon.BLUE);
 		attachmentMovie.setColorFilter(SvgIcon.BLUE);
+
+		accountMultipleBlueXLarge.setColorFilter(SvgIcon.BLUE);
+		emailOutlineBlueXLarge.setColorFilter(SvgIcon.BLUE);
+		emailOutlineWhiteXLarge.setColorFilter(SvgIcon.WHITE);
+
 	}
 
 }

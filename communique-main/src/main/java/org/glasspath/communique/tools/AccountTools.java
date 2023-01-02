@@ -30,6 +30,7 @@ import javax.swing.JMenuItem;
 
 import org.glasspath.common.share.mail.account.SmtpAccount;
 import org.glasspath.communique.Communique;
+import org.glasspath.communique.account.AccountManagerDialog;
 import org.glasspath.communique.icons.Icons;
 
 public class AccountTools {
@@ -50,7 +51,7 @@ public class AccountTools {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO
+				new AccountManagerDialog(context).setVisible(true);
 			}
 		});
 
