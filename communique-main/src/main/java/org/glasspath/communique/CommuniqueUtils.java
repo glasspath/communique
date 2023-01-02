@@ -261,6 +261,9 @@ public class CommuniqueUtils {
 
 			DesktopUtils.mail(mailtoURI);
 
+			// Mailto doesn't support attachments, let's open the location so the user can drag it to the email
+			openAttachmentsLocations(mailable);
+
 			return true;
 
 		} catch (Exception e) {
@@ -280,6 +283,9 @@ public class CommuniqueUtils {
 			URI gmailMailtoURI = MailUtils.createGmailMailtoUri(mailable);
 
 			DesktopUtils.browse(gmailMailtoURI);
+
+			// Gmail-mailto doesn't support attachments, let's open the location so the user can drag it to the email
+			openAttachmentsLocations(mailable);
 
 			return true;
 
@@ -401,6 +407,26 @@ public class CommuniqueUtils {
 		}
 
 		return false;
+
+	}
+
+	public static void openAttachmentsLocations(Mailable mailable) {
+
+		// TODO: For multiple attachments we should check if they are all in the same location
+		if (mailable.getAttachments() != null && mailable.getAttachments().size() == 1) {
+
+			try {
+
+				File attachment = new File(mailable.getAttachments().get(0));
+				if (attachment.exists() && !attachment.isDirectory()) {
+					DesktopUtils.open(attachment.getParent());
+				}
+
+			} catch (Exception e) {
+				Communique.LOGGER.error("Exception while opening attachments location", e); //$NON-NLS-1$
+			}
+
+		}
 
 	}
 
