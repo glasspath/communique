@@ -36,6 +36,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.font.LineMetrics;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 import java.util.List;
@@ -280,19 +281,22 @@ public class EmailToolBar extends JPanel {
 					if (recipients != null) {
 
 						String text = getText();
+						String textLowerCase = text.toLowerCase();
 
 						for (String recipient : recipients) {
 
-							int i = text.indexOf(recipient);
+							int i = textLowerCase.indexOf(recipient);
 							if (i >= 0) {
 
+								String s = text.substring(i, i + recipient.length());
 								FontMetrics fontMetrics = g2d.getFontMetrics();
 
 								double x = MARGIN_RIGHT + fontMetrics.getStringBounds(text.substring(0, i), g2d).getWidth();
 
-								Rectangle2D bounds = fontMetrics.getStringBounds(recipient, g2d);
+								Rectangle2D bounds = fontMetrics.getStringBounds(s, g2d);
+								LineMetrics lineMetrics = fontMetrics.getLineMetrics(s, g2d);
 
-								RoundRectangle2D roundRect = new RoundRectangle2D.Double(x - 0.5, getHeight() - bounds.getHeight() - fontMetrics.getDescent() + 1, bounds.getWidth() + 1, bounds.getHeight(), 6, 6);
+								RoundRectangle2D roundRect = new RoundRectangle2D.Double(x - 0.5, getHeight() - lineMetrics.getHeight() - lineMetrics.getDescent() + (lineMetrics.getHeight() - lineMetrics.getAscent()) - 1, bounds.getWidth() + 1, lineMetrics.getAscent() + 2, 6, 6);
 								g2d.setColor(Theme.isDark() ? new Color(250, 250, 250, 25) : new Color(0, 0, 0, 25));
 								g2d.fill(roundRect);
 
