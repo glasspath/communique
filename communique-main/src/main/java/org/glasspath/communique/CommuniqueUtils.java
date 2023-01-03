@@ -274,46 +274,46 @@ public class CommuniqueUtils {
 
 	}
 
-	public static boolean sendGmailMailto(Communique context) {
+	public static boolean sendGmailCompose(Communique context) {
 
 		Mailable mailable = createMailable(context);
 
 		try {
 
-			URI gmailMailtoURI = MailUtils.createGmailMailtoUri(mailable);
+			URI gmailComposeURI = MailUtils.createGmailComposeUri(mailable);
 
-			DesktopUtils.browse(gmailMailtoURI);
+			DesktopUtils.browse(gmailComposeURI);
 
-			// Gmail-mailto doesn't support attachments, let's open the location so the user can drag it to the email
+			// Gmail compose doesn't support attachments, let's open the location so the user can drag it to the email
 			openAttachmentsLocations(mailable);
 
 			return true;
 
 		} catch (Exception e) {
-			Communique.LOGGER.error("Exception while sharing email through gmail mailto", e); //$NON-NLS-1$
+			Communique.LOGGER.error("Exception while sharing email through gmail compose", e); //$NON-NLS-1$
 		}
 
 		return false;
 
 	}
 
-	public static boolean sendOutlookLive(Communique context) {
+	public static boolean sendOutlookLiveCompose(Communique context) {
 
 		Mailable mailable = createMailable(context);
 
 		try {
 
-			URI outlookLiveURI = MailUtils.createOutlookLiveUri(mailable);
+			URI outlookLiveComposeURI = MailUtils.createOutlookLiveComposeUri(mailable);
 
-			DesktopUtils.browse(outlookLiveURI);
+			DesktopUtils.browse(outlookLiveComposeURI);
 
-			// Outlook live doesn't support attachments, let's open the location so the user can drag it to the email
+			// Outlook live compose doesn't support attachments, let's open the location so the user can drag it to the email
 			openAttachmentsLocations(mailable);
 
 			return true;
 
 		} catch (Exception e) {
-			Communique.LOGGER.error("Exception while sharing email through outlook live", e); //$NON-NLS-1$
+			Communique.LOGGER.error("Exception while sharing email through outlook live compose", e); //$NON-NLS-1$
 		}
 
 		return false;

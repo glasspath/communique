@@ -105,8 +105,8 @@ public class Communique implements FrameContext {
 	public static final int SEND_MODE_WINDOWS_OUTLOOK_COMMAND_LINE = 31;
 	public static final int SEND_MODE_MAC_APP_KIT_SHARING_SERVICE = 40;
 	public static final int SEND_MODE_THUNDERBIRD_COMMAND_LINE = 50;
-	public static final int SEND_MODE_GMAIL_MAILTO = 60;
-	public static final int SEND_MODE_OUTLOOK_LIVE = 61;
+	public static final int SEND_MODE_GMAIL_COMPOSE = 60;
+	public static final int SEND_MODE_OUTLOOK_LIVE_COMPOSE = 61;
 
 	public static Preferences PREFERENCES = Preferences.userNodeForPackage(Communique.class);
 
@@ -336,12 +336,12 @@ public class Communique implements FrameContext {
 			CommuniqueUtils.sendThunderbirdCommandLine(this);
 			break;
 
-		case SEND_MODE_GMAIL_MAILTO:
-			CommuniqueUtils.sendGmailMailto(this);
+		case SEND_MODE_GMAIL_COMPOSE:
+			CommuniqueUtils.sendGmailCompose(this);
 			break;
 
-		case SEND_MODE_OUTLOOK_LIVE:
-			CommuniqueUtils.sendOutlookLive(this);
+		case SEND_MODE_OUTLOOK_LIVE_COMPOSE:
+			CommuniqueUtils.sendOutlookLiveCompose(this);
 			break;
 
 		default:
