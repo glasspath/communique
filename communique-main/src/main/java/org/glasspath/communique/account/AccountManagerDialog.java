@@ -183,16 +183,16 @@ public class AccountManagerDialog extends DefaultDialog {
 			wrapper.setLayout(layout);
 
 			iconLabel = new JLabel();
-			wrapper.add(iconLabel, new GridBagConstraints(0, 0, 1, 2, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 2, 0, 0), 0, 0));
+			wrapper.add(iconLabel, new GridBagConstraints(0, 0, 1, 2, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(2, 2, 0, 0), 0, 0));
 
 			Font font = getFont();
 
 			titleLabel = new JLabel("Dit is een test");
-			titleLabel.setFont(font.deriveFont((float) font.getSize() + 2));
-			wrapper.add(titleLabel, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.SOUTH, GridBagConstraints.HORIZONTAL, new Insets(4, 0, 0, 8), 0, 0));
+			titleLabel.setFont(font.deriveFont(Font.BOLD));
+			wrapper.add(titleLabel, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.SOUTH, GridBagConstraints.HORIZONTAL, new Insets(8, 0, 0, 8), 0, 0));
 
 			descriptionLabel = new JLabel();
-			descriptionLabel.setFont(font.deriveFont(Font.ITALIC));
+			descriptionLabel.setFont(font.deriveFont(Font.ITALIC, (float) font.getSize() - 2));
 			wrapper.add(descriptionLabel, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 8, 8), 0, 0));
 
 		}

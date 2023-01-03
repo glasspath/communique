@@ -60,8 +60,8 @@ public class Icons {
 
 	public static final SvgIcon accountMultipleBlueXLarge = new SvgIcon(36, 0, getSvg("account-multiple.svg"));
 	public static final SvgIcon accountOutline = new SvgIcon(getSvg("account-outline.svg"));
-	public static final SvgIcon emailOutlineBlueXLarge = new SvgIcon(30, 0, getSvg("email-outline.svg"));
-	public static final SvgIcon emailOutlineWhiteXLarge = new SvgIcon(30, 0, getSvg("email-outline.svg"));
+	public static final SvgIcon emailOutlineBlueXLarge = new SvgIcon(28, 0, getSvg("email-outline.svg"));
+	public static final SvgIcon emailOutlineWhiteXLarge = new SvgIcon(28, 0, getSvg("email-outline.svg"));
 	public static final SvgIcon paperclip = new SvgIcon(getSvg("paperclip.svg"));
 
 	static {
