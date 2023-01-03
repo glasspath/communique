@@ -297,6 +297,29 @@ public class CommuniqueUtils {
 
 	}
 
+	public static boolean sendOutlookLive(Communique context) {
+
+		Mailable mailable = createMailable(context);
+
+		try {
+
+			URI outlookLiveURI = MailUtils.createOutlookLiveUri(mailable);
+
+			DesktopUtils.browse(outlookLiveURI);
+
+			// Outlook live doesn't support attachments, let's open the location so the user can drag it to the email
+			openAttachmentsLocations(mailable);
+
+			return true;
+
+		} catch (Exception e) {
+			Communique.LOGGER.error("Exception while sharing email through outlook live", e); //$NON-NLS-1$
+		}
+
+		return false;
+
+	}
+
 	public static boolean sendMapi(Communique context) {
 
 		Mailable mailable = createMailable(context);

@@ -100,12 +100,13 @@ public class Communique implements FrameContext {
 	public static final int SEND_MODE_MAILTO = 3;
 	public static final int SEND_MODE_GLASSPATH_SYNC = 10;
 	public static final int SEND_MODE_WINDOWS_MAPI = 20;
-	public static final int SEND_MODE_WINDOWS_OUTLOOK_OBJECT_MODEL = 21;
-	public static final int SEND_MODE_WINDOWS_OUTLOOK_COMMAND_LINE = 22;
-	public static final int SEND_MODE_WINDOWS_UWP_SHARE_MENU = 23;
-	public static final int SEND_MODE_MAC_APP_KIT_SHARING_SERVICE = 30;
-	public static final int SEND_MODE_THUNDERBIRD_COMMAND_LINE = 40;
-	public static final int SEND_MODE_GMAIL_MAILTO = 50;
+	public static final int SEND_MODE_WINDOWS_UWP_SHARE_MENU = 21;
+	public static final int SEND_MODE_WINDOWS_OUTLOOK_OBJECT_MODEL = 30;
+	public static final int SEND_MODE_WINDOWS_OUTLOOK_COMMAND_LINE = 31;
+	public static final int SEND_MODE_MAC_APP_KIT_SHARING_SERVICE = 40;
+	public static final int SEND_MODE_THUNDERBIRD_COMMAND_LINE = 50;
+	public static final int SEND_MODE_GMAIL_MAILTO = 60;
+	public static final int SEND_MODE_OUTLOOK_LIVE = 61;
 
 	public static Preferences PREFERENCES = Preferences.userNodeForPackage(Communique.class);
 
@@ -311,12 +312,12 @@ public class Communique implements FrameContext {
 			CommuniqueUtils.sendMailto(this);
 			break;
 
-		case SEND_MODE_GMAIL_MAILTO:
-			CommuniqueUtils.sendGmailMailto(this);
-			break;
-
 		case SEND_MODE_WINDOWS_MAPI:
 			CommuniqueUtils.sendMapi(this);
+			break;
+
+		case SEND_MODE_WINDOWS_UWP_SHARE_MENU:
+			CommuniqueUtils.sendUwpShareMenu(this);
 			break;
 
 		case SEND_MODE_WINDOWS_OUTLOOK_OBJECT_MODEL:
@@ -327,16 +328,20 @@ public class Communique implements FrameContext {
 			CommuniqueUtils.sendOutlookCommandLine(this);
 			break;
 
-		case SEND_MODE_WINDOWS_UWP_SHARE_MENU:
-			CommuniqueUtils.sendUwpShareMenu(this);
-			break;
-
 		case SEND_MODE_MAC_APP_KIT_SHARING_SERVICE:
 			CommuniqueUtils.sendAppKitSharingService(this);
 			break;
 
 		case SEND_MODE_THUNDERBIRD_COMMAND_LINE:
 			CommuniqueUtils.sendThunderbirdCommandLine(this);
+			break;
+
+		case SEND_MODE_GMAIL_MAILTO:
+			CommuniqueUtils.sendGmailMailto(this);
+			break;
+
+		case SEND_MODE_OUTLOOK_LIVE:
+			CommuniqueUtils.sendOutlookLive(this);
 			break;
 
 		default:
