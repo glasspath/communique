@@ -14,6 +14,7 @@ import org.glasspath.aerialist.HtmlExporter;
 import org.glasspath.aerialist.media.MediaCache.ImageResource;
 import org.glasspath.common.GlasspathSystemProperties;
 import org.glasspath.common.os.OsUtils;
+import org.glasspath.common.share.ShareException;
 import org.glasspath.common.share.appkit.AppKitShareUtils;
 import org.glasspath.common.share.mail.MailShareUtils;
 import org.glasspath.common.share.mail.MailUtils;
@@ -167,7 +168,7 @@ public class CommuniqueUtils {
 		return context.getMainPanel().getEmailEditor().getEmailContainer().toEmail();
 	}
 
-	public static boolean sendSmtp(Communique context, SmtpAccount account) {
+	public static void sendSmtp(Communique context, SmtpAccount account) throws ShareException {
 
 		AccountLoginDialog loginDialog = new AccountLoginDialog(context, account == null ? "" : account.getEmail(), "", account == null); //$NON-NLS-1$ //$NON-NLS-2$
 		if (loginDialog.login() == LoginDialog.RESULT_OK) {
@@ -205,28 +206,22 @@ public class CommuniqueUtils {
 						CompletableFuture<Void> future = MailShareUtils.sendSimpleEmail(simpleEmail, account, loginDialog.getPassword(), context.getConfiguration().getTimeout());
 
 						if (future != null) {
-
 							future.get();
-
-							return true;
-
 						}
 
 					}
 
 				} catch (Exception e) {
-					Communique.LOGGER.error("Exception while sending mail (smtp): ", e); //$NON-NLS-1$
+					throw new ShareException("Exception while sending mail (smtp): ", e); //$NON-NLS-1$
 				}
 
 			}
 
 		}
 
-		return false;
-
 	}
 
-	public static boolean exportAndLaunchEml(Communique context) {
+	public static void exportAndLaunchEml(Communique context) throws ShareException {
 
 		try {
 
@@ -239,19 +234,15 @@ public class CommuniqueUtils {
 				MailShareUtils.exportToEml(simpleEmail, emlFile);
 				DesktopUtils.open(emlFile);
 
-				return true;
-
 			}
 
 		} catch (Exception e) {
-			Communique.LOGGER.error("Exception while exporting to .eml: ", e); //$NON-NLS-1$
+			throw new ShareException("Exception while exporting to .eml: ", e); //$NON-NLS-1$
 		}
-
-		return false;
 
 	}
 
-	public static boolean sendMailto(Communique context) {
+	public static void sendMailto(Communique context) throws ShareException {
 
 		Mailable mailable = createMailable(context);
 
@@ -264,17 +255,13 @@ public class CommuniqueUtils {
 			// Mailto doesn't support attachments, let's open the location so the user can drag it to the email
 			openAttachmentsLocations(mailable);
 
-			return true;
-
 		} catch (Exception e) {
-			Communique.LOGGER.error("Exception while sharing email through mailto", e); //$NON-NLS-1$
+			throw new ShareException("Exception while sharing email through mailto", e); //$NON-NLS-1$
 		}
-
-		return false;
 
 	}
 
-	public static boolean sendGmailCompose(Communique context) {
+	public static void sendGmailCompose(Communique context) throws ShareException {
 
 		Mailable mailable = createMailable(context);
 
@@ -287,17 +274,13 @@ public class CommuniqueUtils {
 			// Gmail compose doesn't support attachments, let's open the location so the user can drag it to the email
 			openAttachmentsLocations(mailable);
 
-			return true;
-
 		} catch (Exception e) {
-			Communique.LOGGER.error("Exception while sharing email through gmail compose", e); //$NON-NLS-1$
+			throw new ShareException("Exception while sharing email through gmail compose", e); //$NON-NLS-1$
 		}
-
-		return false;
 
 	}
 
-	public static boolean sendOutlookLiveCompose(Communique context) {
+	public static void sendOutlookLiveCompose(Communique context) throws ShareException {
 
 		Mailable mailable = createMailable(context);
 
@@ -310,17 +293,13 @@ public class CommuniqueUtils {
 			// Outlook live compose doesn't support attachments, let's open the location so the user can drag it to the email
 			openAttachmentsLocations(mailable);
 
-			return true;
-
 		} catch (Exception e) {
-			Communique.LOGGER.error("Exception while sharing email through outlook live compose", e); //$NON-NLS-1$
+			throw new ShareException("Exception while sharing email through outlook live compose", e); //$NON-NLS-1$
 		}
-
-		return false;
 
 	}
 
-	public static boolean sendMapi(Communique context) {
+	public static void sendMapi(Communique context) throws ShareException {
 
 		Mailable mailable = createMailable(context);
 
@@ -328,17 +307,13 @@ public class CommuniqueUtils {
 
 			MapiShareUtils.createEmail(mailable);
 
-			return true;
-
 		} catch (Exception e) {
-			Communique.LOGGER.error("Exception while sharing email through Mapi", e); //$NON-NLS-1$
+			throw new ShareException("Exception while sharing email through Mapi", e); //$NON-NLS-1$
 		}
-
-		return false;
 
 	}
 
-	public static boolean sendOutlookObjectModel(Communique context) {
+	public static void sendOutlookObjectModel(Communique context) throws ShareException {
 
 		Mailable mailable = createMailable(context);
 
@@ -346,17 +321,13 @@ public class CommuniqueUtils {
 
 			OutlookShareUtils.createEmail(mailable);
 
-			return true;
-
 		} catch (Exception e) {
-			Communique.LOGGER.error("Exception while sharing email through Outlook (COM)", e); //$NON-NLS-1$
+			throw new ShareException("Exception while sharing email through Outlook (COM)", e); //$NON-NLS-1$
 		}
-
-		return false;
 
 	}
 
-	public static boolean sendOutlookCommandLine(Communique context) {
+	public static void sendOutlookCommandLine(Communique context) throws ShareException {
 
 		Mailable mailable = createMailable(context);
 
@@ -364,17 +335,13 @@ public class CommuniqueUtils {
 
 			OutlookShareUtils.createCommandLineEmail(mailable);
 
-			return true;
-
 		} catch (Exception e) {
-			Communique.LOGGER.error("Exception while sharing email through Outlook (command line)", e); //$NON-NLS-1$
+			throw new ShareException("Exception while sharing email through Outlook (command line)", e); //$NON-NLS-1$
 		}
-
-		return false;
 
 	}
 
-	public static boolean sendThunderbirdCommandLine(Communique context) {
+	public static void sendThunderbirdCommandLine(Communique context) throws ShareException {
 
 		Mailable mailable = createMailable(context);
 
@@ -382,17 +349,13 @@ public class CommuniqueUtils {
 
 			ThunderbirdShareUtils.createCommandLineEmail(mailable);
 
-			return true;
-
 		} catch (Exception e) {
-			Communique.LOGGER.error("Exception while sharing email through Thunderbird (command line)", e); //$NON-NLS-1$
+			throw new ShareException("Exception while sharing email through Thunderbird (command line)", e); //$NON-NLS-1$
 		}
-
-		return false;
 
 	}
 
-	public static boolean sendUwpShareMenu(Communique context) {
+	public static void sendUwpShareMenu(Communique context) throws ShareException {
 
 		Mailable mailable = createMailable(context);
 
@@ -405,17 +368,13 @@ public class CommuniqueUtils {
 
 			UwpShareUtils.showShareMenu(context.getFrame(), mailable, null, assemblyResolvePath);
 
-			return true;
-
 		} catch (Exception e) {
-			Communique.LOGGER.error("Exception while sharing email through UWP share menu", e); //$NON-NLS-1$
+			throw new ShareException("Exception while sharing email through UWP share menu", e); //$NON-NLS-1$
 		}
-
-		return false;
 
 	}
 
-	public static boolean sendAppKitSharingService(Communique context) {
+	public static void sendAppKitSharingService(Communique context) throws ShareException {
 
 		Mailable mailable = createMailable(context);
 
@@ -423,13 +382,9 @@ public class CommuniqueUtils {
 
 			AppKitShareUtils.createEmail(mailable);
 
-			return true;
-
 		} catch (Exception e) {
-			Communique.LOGGER.error("Exception while sharing email through AppKit", e); //$NON-NLS-1$
+			throw new ShareException("Exception while sharing email through AppKit", e); //$NON-NLS-1$
 		}
-
-		return false;
 
 	}
 

@@ -62,6 +62,7 @@ import org.glasspath.common.share.mail.Mailable;
 import org.glasspath.common.share.mail.account.SmtpAccount;
 import org.glasspath.common.swing.FrameContext;
 import org.glasspath.common.swing.color.ColorUtils;
+import org.glasspath.common.swing.dialog.DialogUtils;
 import org.glasspath.common.swing.frame.FrameUtils;
 import org.glasspath.common.swing.statusbar.StatusBar;
 import org.glasspath.common.swing.theme.Theme;
@@ -299,53 +300,61 @@ public class Communique implements FrameContext {
 
 	public void send(int sendMode) {
 
-		switch (sendMode) {
-		case SEND_MODE_SMTP:
-			CommuniqueUtils.sendSmtp(this, getAccount());
-			break;
+		try {
 
-		case SEND_MODE_EML:
-			CommuniqueUtils.exportAndLaunchEml(this);
-			break;
+			switch (sendMode) {
 
-		case SEND_MODE_MAILTO:
-			CommuniqueUtils.sendMailto(this);
-			break;
+			case SEND_MODE_SMTP:
+				CommuniqueUtils.sendSmtp(this, getAccount());
+				break;
 
-		case SEND_MODE_WINDOWS_MAPI:
-			CommuniqueUtils.sendMapi(this);
-			break;
+			case SEND_MODE_EML:
+				CommuniqueUtils.exportAndLaunchEml(this);
+				break;
 
-		case SEND_MODE_WINDOWS_UWP_SHARE_MENU:
-			CommuniqueUtils.sendUwpShareMenu(this);
-			break;
+			case SEND_MODE_MAILTO:
+				CommuniqueUtils.sendMailto(this);
+				break;
 
-		case SEND_MODE_WINDOWS_OUTLOOK_OBJECT_MODEL:
-			CommuniqueUtils.sendOutlookObjectModel(this);
-			break;
+			case SEND_MODE_WINDOWS_MAPI:
+				CommuniqueUtils.sendMapi(this);
+				break;
 
-		case SEND_MODE_WINDOWS_OUTLOOK_COMMAND_LINE:
-			CommuniqueUtils.sendOutlookCommandLine(this);
-			break;
+			case SEND_MODE_WINDOWS_UWP_SHARE_MENU:
+				CommuniqueUtils.sendUwpShareMenu(this);
+				break;
 
-		case SEND_MODE_MAC_APP_KIT_SHARING_SERVICE:
-			CommuniqueUtils.sendAppKitSharingService(this);
-			break;
+			case SEND_MODE_WINDOWS_OUTLOOK_OBJECT_MODEL:
+				CommuniqueUtils.sendOutlookObjectModel(this);
+				break;
 
-		case SEND_MODE_THUNDERBIRD_COMMAND_LINE:
-			CommuniqueUtils.sendThunderbirdCommandLine(this);
-			break;
+			case SEND_MODE_WINDOWS_OUTLOOK_COMMAND_LINE:
+				CommuniqueUtils.sendOutlookCommandLine(this);
+				break;
 
-		case SEND_MODE_GMAIL_COMPOSE:
-			CommuniqueUtils.sendGmailCompose(this);
-			break;
+			case SEND_MODE_MAC_APP_KIT_SHARING_SERVICE:
+				CommuniqueUtils.sendAppKitSharingService(this);
+				break;
 
-		case SEND_MODE_OUTLOOK_LIVE_COMPOSE:
-			CommuniqueUtils.sendOutlookLiveCompose(this);
-			break;
+			case SEND_MODE_THUNDERBIRD_COMMAND_LINE:
+				CommuniqueUtils.sendThunderbirdCommandLine(this);
+				break;
 
-		default:
-			break;
+			case SEND_MODE_GMAIL_COMPOSE:
+				CommuniqueUtils.sendGmailCompose(this);
+				break;
+
+			case SEND_MODE_OUTLOOK_LIVE_COMPOSE:
+				CommuniqueUtils.sendOutlookLiveCompose(this);
+				break;
+
+			default:
+				break;
+			}
+
+		} catch (Exception e) {
+			LOGGER.error("Exception while sending email", e);
+			DialogUtils.showWarningMessage(frame, "Warning", "Something went wrong, please check the application log.", e);
 		}
 
 	}
