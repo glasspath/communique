@@ -227,17 +227,18 @@ public class CommuniqueUtils {
 								CompletableFuture<Void> future = MailShareUtils.sendSimpleEmail(simpleEmail, selectedAccount, loginDialog.getPassword(), context.getConfiguration().getTimeout(), false);
 								if (future != null) {
 									future.get();
+									closeBusyDialog(null);
 								}
 
 							}
 
 						} catch (Exception e) {
-							handleException(e);
+							closeBusyDialog(e);
 						}
 
 					}
 
-					private void handleException(Throwable e) {
+					private void closeBusyDialog(Throwable e) {
 
 						SwingUtilities.invokeLater(new Runnable() {
 
