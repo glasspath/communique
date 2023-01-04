@@ -32,8 +32,12 @@ import org.glasspath.common.swing.dialog.LoginDialog;
 
 public class AccountLoginDialog extends LoginDialog {
 
-	public AccountLoginDialog(FrameContext context, String username, String password, boolean usernameEditable) {
+	private final boolean passwordRequired;
+
+	public AccountLoginDialog(FrameContext context, String username, String password, boolean usernameEditable, boolean passwordRequired) {
 		super(context, username, password, usernameEditable);
+
+		this.passwordRequired = passwordRequired;
 
 		usernameTextField.getDocument().addDocumentListener(new DocumentListener() {
 
@@ -90,9 +94,9 @@ public class AccountLoginDialog extends LoginDialog {
 
 				if (!MailUtils.isValidEmailAddress(getUsername())) {
 					enabled = false;
-				} else if (getPassword() == null) {
+				} else if (passwordRequired && getPassword() == null) {
 					enabled = false;
-				} else if (getPassword().length() == 0) {
+				} else if (passwordRequired && getPassword().length() == 0) {
 					enabled = false;
 				}
 

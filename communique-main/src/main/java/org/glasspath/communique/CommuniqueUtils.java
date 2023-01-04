@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.CompletableFuture;
 
+import javax.swing.JDialog;
+import javax.swing.SwingUtilities;
+
 import org.glasspath.aerialist.Content;
 import org.glasspath.aerialist.Email;
 import org.glasspath.aerialist.HtmlExporter;
@@ -25,6 +28,7 @@ import org.glasspath.common.share.outlook.OutlookShareUtils;
 import org.glasspath.common.share.thunderbird.ThunderbirdShareUtils;
 import org.glasspath.common.share.uwp.UwpShareUtils;
 import org.glasspath.common.swing.DesktopUtils;
+import org.glasspath.common.swing.dialog.DialogUtils;
 import org.glasspath.common.swing.dialog.LoginDialog;
 import org.glasspath.common.xml.XmlUtils;
 import org.glasspath.communique.account.AccountLoginDialog;
@@ -170,7 +174,7 @@ public class CommuniqueUtils {
 
 	public static void sendSmtp(Communique context, SmtpAccount account) throws ShareException {
 
-		AccountLoginDialog loginDialog = new AccountLoginDialog(context, account == null ? "" : account.getEmail(), "", account == null); //$NON-NLS-1$ //$NON-NLS-2$
+		AccountLoginDialog loginDialog = new AccountLoginDialog(context, account == null ? "" : account.getEmail(), "", account == null, false); //$NON-NLS-1$ //$NON-NLS-2$
 		if (loginDialog.login() == LoginDialog.RESULT_OK) {
 
 			if (account == null) {
@@ -194,26 +198,64 @@ public class CommuniqueUtils {
 
 			if (account != null) {
 
-				try {
+				SmtpAccount selectedAccount = account;
 
-					Mailable mailable = createMailable(context);
+				JDialog busyDialog = DialogUtils.showBusyMessage(context.getFrame(), "Sending email", "Sending email..", true);
 
-					org.simplejavamail.api.email.Email simpleEmail = MailShareUtils.createSimpleEmail(mailable, account);
-					if (simpleEmail != null) {
+				// Modal dialog blocks on setVisible(true) so we have to start a new thread
+				new Thread(new Runnable() {
 
-						// TODO: Run in thread and show progress dialog
+					@Override
+					public void run() {
 
-						CompletableFuture<Void> future = MailShareUtils.sendSimpleEmail(simpleEmail, account, loginDialog.getPassword(), context.getConfiguration().getTimeout());
+						SwingUtilities.invokeLater(new Runnable() {
 
-						if (future != null) {
-							future.get();
+							@Override
+							public void run() {
+								busyDialog.setVisible(true);
+							}
+						});
+
+						try {
+
+							Mailable mailable = createMailable(context);
+
+							org.simplejavamail.api.email.Email simpleEmail = MailShareUtils.createSimpleEmail(mailable, selectedAccount);
+							if (simpleEmail != null) {
+
+								// No need to set async to true because we already created a background thread
+								CompletableFuture<Void> future = MailShareUtils.sendSimpleEmail(simpleEmail, selectedAccount, loginDialog.getPassword(), context.getConfiguration().getTimeout(), false);
+								if (future != null) {
+									future.get();
+								}
+
+							}
+
+						} catch (Exception e) {
+							handleException(e);
 						}
 
 					}
 
-				} catch (Exception e) {
-					throw new ShareException("Exception while sending mail (smtp): ", e); //$NON-NLS-1$
-				}
+					private void handleException(Throwable e) {
+
+						SwingUtilities.invokeLater(new Runnable() {
+
+							@Override
+							public void run() {
+
+								busyDialog.setVisible(false);
+
+								if (e != null) {
+									Communique.LOGGER.error("Exception while sending email", e); //$NON-NLS-1$
+									DialogUtils.showWarningMessage(context.getFrame(), "Warning", "Something went wrong, please check the application log.", e);
+								}
+
+							}
+						});
+
+					}
+				}).start();
 
 			}
 
