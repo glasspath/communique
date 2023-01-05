@@ -25,12 +25,9 @@ package org.glasspath.communique.account;
 import javax.swing.BorderFactory;
 import javax.swing.SwingUtilities;
 
-import org.glasspath.common.share.mail.Imap;
 import org.glasspath.common.share.mail.MailShareUtils;
-import org.glasspath.common.share.mail.Smtp;
 import org.glasspath.common.share.mail.account.Account;
-import org.glasspath.common.share.mail.account.ImapConfiguration;
-import org.glasspath.common.share.mail.account.SmtpConfiguration;
+import org.glasspath.common.share.mail.account.AccountFinder;
 import org.glasspath.common.swing.console.Console;
 import org.glasspath.common.swing.dialog.DefaultDialog;
 import org.glasspath.communique.Communique;
@@ -46,7 +43,7 @@ public class AccountFinderDialog extends DefaultDialog {
 	private Account account = null;
 	private int result = RESULT_CANCEL;
 
-	public AccountFinderDialog(Communique context, String host, String username, String password) {
+	public AccountFinderDialog(Communique context, String email, String password) {
 		super(context);
 
 		setTitle("Create Account");
@@ -66,116 +63,83 @@ public class AccountFinderDialog extends DefaultDialog {
 			public void run() {
 
 				int timeout = context.getConfiguration().getTimeout();
-				
-				Account account = new Account();
-				account.setName(username);
-				account.setEmail(username);
 
-				SmtpConfiguration smptConfiguration = new SmtpConfiguration();
-				account.setSmtpConfiguration(smptConfiguration);
+				AccountFinder accountFinder = new AccountFinder() {
 
-				outerSmtpLoop: for (int smtpUrlIndex = 0; smtpUrlIndex < Smtp.COMMON_URLS.length; smtpUrlIndex++) {
+					@Override
+					protected boolean isCancelled() {
+						return stopping;
+					}
 
-					for (int smtpPortIndex = 0; smtpPortIndex < Smtp.COMMON_PORTS.length; smtpPortIndex++) {
+					@Override
+					protected boolean testSmtpConfiguration(Account account) {
 
-						if (stopping) {
-							break outerSmtpLoop;
-						} else {
+						if (account.getSmtpConfiguration() != null) {
 
-							smptConfiguration.setHost(Smtp.COMMON_URLS[smtpUrlIndex] + host);
-							smptConfiguration.setPort(Smtp.COMMON_PORTS[smtpPortIndex]);
-
-							Communique.LOGGER.info("SMTP: Trying " + smptConfiguration.getHost() + " on port " + smptConfiguration.getPort());
-							addLineToConsole("SMTP: Trying " + smptConfiguration.getHost() + " on port " + smptConfiguration.getPort());
+							addLineToConsole("SMTP: Trying " + account.getSmtpConfiguration().getHost() + " on port " + account.getSmtpConfiguration().getPort());
 
 							try {
 
 								MailShareUtils.testSmtpConfiguration(account, password, timeout);
-
 								addLineToConsole("SMTP: Connection established!");
 
-								boolean imapConfigurationFound = false;
-
-								ImapConfiguration imapConfguration = new ImapConfiguration();
-								account.setImapConfiguration(imapConfguration);
-
-								outerImapLoop: for (int imapUrlIndex = 0; imapUrlIndex < Imap.COMMON_URLS.length; imapUrlIndex++) {
-
-									for (int imapPortIndex = 0; imapPortIndex < Imap.COMMON_PORTS.length; imapPortIndex++) {
-
-										imapConfguration.setHost(Imap.COMMON_URLS[imapUrlIndex] + host);
-										imapConfguration.setPort(Imap.COMMON_PORTS[imapPortIndex]);
-
-										Communique.LOGGER.info("IMAP: Trying " + imapConfguration.getHost() + " on port " + imapConfguration.getPort());
-										addLineToConsole("IMAP: Trying " + imapConfguration.getHost() + " on port " + imapConfguration.getPort());
-
-										try {
-
-											String sentFolderPath = MailShareUtils.findImapSentFolderPath(account, password, timeout);
-											if (sentFolderPath != null && sentFolderPath.length() > 0) {
-
-												imapConfguration.setSentFolderPath(sentFolderPath);
-												imapConfigurationFound = true;
-
-												addLineToConsole("IMAP: Connection established!");
-
-												break outerImapLoop;
-
-											}
-
-										} catch (Exception e) {
-											Communique.LOGGER.error("Exception while testing imap configuration: ", e); //$NON-NLS-1$
-											addLineToConsole("IMAP: Connection failed..");
-										}
-
-									}
-
-								}
-
-								if (!imapConfigurationFound) {
-									account.setImapConfiguration(null);
-								}
-
-								AccountFinderDialog.this.account = account;
-
-								SwingUtilities.invokeLater(new Runnable() {
-
-									@Override
-									public void run() {
-										getOkButton().setVisible(true);
-									}
-								});
-
-								break outerSmtpLoop;
+								return true;
 
 							} catch (Exception e) {
-
-								Communique.LOGGER.error("Exception while testing smtp configuration: ", e); //$NON-NLS-1$
-
-								addLineToConsole("SMTP: Connection failed..");
-								/*
-								// TODO: MailerExceptopn is internal, how should we check for UnknownHostException's?
-								if ("Was unable to connect to SMTP server".equals(e.getMessage())) { //$NON-NLS-1$
-								
-									addLineToConsole("Connection failed, host not found..");
-								
-									Communique.LOGGER.info("Unknown host, skipping to next url: ", e); //$NON-NLS-1$
-									portIndex = Smtp.COMMON_PORTS.length;
-								
-								} else {
-									addLineToConsole("Connection failed..");
-								}
-								*/
-
+								Communique.LOGGER.error("Exception while testing imap configuration: ", e); //$NON-NLS-1$
 							}
 
 						}
 
+						addLineToConsole("IMAP: Connection failed..");
+
+						return false;
+
 					}
 
-				}
+					@Override
+					protected String getImapSentFolderPath(Account account) {
 
-				if (account == null) {
+						if (account.getImapConfiguration() != null) {
+
+							addLineToConsole("IMAP: Trying " + account.getImapConfiguration().getHost() + " on port " + account.getImapConfiguration().getPort());
+
+							try {
+
+								String sentFolderPath = MailShareUtils.findImapSentFolderPath(account, password, timeout);
+								if (sentFolderPath != null && sentFolderPath.length() > 0) {
+
+									addLineToConsole("IMAP: Connection established!");
+
+									return sentFolderPath;
+
+								}
+
+							} catch (Exception e) {
+								Communique.LOGGER.error("Exception while testing imap configuration: ", e); //$NON-NLS-1$
+							}
+
+						}
+
+						addLineToConsole("IMAP: Connection failed..");
+
+						return null;
+
+					}
+				};
+
+				account = accountFinder.findAccount(email);
+				if (account != null) {
+
+					SwingUtilities.invokeLater(new Runnable() {
+
+						@Override
+						public void run() {
+							getOkButton().setVisible(true);
+						}
+					});
+
+				} else {
 					addLineToConsole("Account settings could not be found..");
 				}
 

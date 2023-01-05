@@ -180,10 +180,9 @@ public class CommuniqueUtils {
 
 			if (account == null) {
 
-				String user = MailUtils.getEmailAddress(loginDialog.getUsername());
-				String host = MailUtils.getHostPart(loginDialog.getUsername());
+				String email = MailUtils.getEmailAddress(loginDialog.getUsername());
 
-				AccountFinderDialog accountFinderDialog = new AccountFinderDialog(context, host, user, loginDialog.getPassword());
+				AccountFinderDialog accountFinderDialog = new AccountFinderDialog(context, email, loginDialog.getPassword());
 				if (accountFinderDialog.getResult() == AccountFinderDialog.RESULT_OK && accountFinderDialog.getAccount() != null) {
 
 					account = accountFinderDialog.getAccount();
