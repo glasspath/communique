@@ -91,7 +91,7 @@ public class AccountFinderDialog extends DefaultDialog {
 
 						}
 
-						addLineToConsole("IMAP: Connection failed..");
+						addLineToConsole("SMTP: Connection failed..");
 
 						return false;
 
