@@ -3,12 +3,12 @@ package org.glasspath.communique;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.glasspath.common.share.mail.account.SmtpAccount;
+import org.glasspath.common.share.mail.account.Account;
 
 public class Configuration {
 
 	private int timeout = 30000;
-	private List<SmtpAccount> accounts = new ArrayList<>();
+	private List<Account> accounts = new ArrayList<>();
 	private int selectedAccount = 0;
 
 	public Configuration() {
@@ -23,11 +23,11 @@ public class Configuration {
 		this.timeout = timeout;
 	}
 
-	public List<SmtpAccount> getAccounts() {
+	public List<Account> getAccounts() {
 		return accounts;
 	}
 
-	public void setAccounts(List<SmtpAccount> accounts) {
+	public void setAccounts(List<Account> accounts) {
 		this.accounts = accounts;
 	}
 

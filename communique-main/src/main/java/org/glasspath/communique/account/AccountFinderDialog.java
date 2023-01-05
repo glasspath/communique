@@ -25,14 +25,17 @@ package org.glasspath.communique.account;
 import javax.swing.BorderFactory;
 import javax.swing.SwingUtilities;
 
+import org.glasspath.common.share.mail.Imap;
 import org.glasspath.common.share.mail.MailShareUtils;
 import org.glasspath.common.share.mail.Smtp;
-import org.glasspath.common.share.mail.account.SmtpAccount;
+import org.glasspath.common.share.mail.account.Account;
+import org.glasspath.common.share.mail.account.ImapConfiguration;
+import org.glasspath.common.share.mail.account.SmtpConfiguration;
 import org.glasspath.common.swing.console.Console;
 import org.glasspath.common.swing.dialog.DefaultDialog;
 import org.glasspath.communique.Communique;
 
-public class SmtpAccountFinderDialog extends DefaultDialog {
+public class AccountFinderDialog extends DefaultDialog {
 
 	public static final int RESULT_CANCEL = 0;
 	public static final int RESULT_OK = 1;
@@ -40,10 +43,10 @@ public class SmtpAccountFinderDialog extends DefaultDialog {
 	private final Console console;
 
 	private boolean stopping = false;
-	private SmtpAccount account = null;
+	private Account account = null;
 	private int result = RESULT_CANCEL;
 
-	public SmtpAccountFinderDialog(Communique context, String host, String username, String password) {
+	public AccountFinderDialog(Communique context, String host, String username, String password) {
 		super(context);
 
 		setTitle("Create Account");
@@ -62,28 +65,76 @@ public class SmtpAccountFinderDialog extends DefaultDialog {
 			@Override
 			public void run() {
 
-				outerLoop: for (int urlIndex = 0; urlIndex < Smtp.COMMON_URLS.length; urlIndex++) {
+				int timeout = context.getConfiguration().getTimeout();
+				
+				Account account = new Account();
+				account.setName(username);
+				account.setEmail(username);
 
-					for (int portIndex = 0; portIndex < Smtp.COMMON_PORTS.length; portIndex++) {
+				SmtpConfiguration smptConfiguration = new SmtpConfiguration();
+				account.setSmtpConfiguration(smptConfiguration);
+
+				outerSmtpLoop: for (int smtpUrlIndex = 0; smtpUrlIndex < Smtp.COMMON_URLS.length; smtpUrlIndex++) {
+
+					for (int smtpPortIndex = 0; smtpPortIndex < Smtp.COMMON_PORTS.length; smtpPortIndex++) {
 
 						if (stopping) {
-							break outerLoop;
+							break outerSmtpLoop;
 						} else {
 
-							SmtpAccount account = new SmtpAccount();
-							account.setEmail(username);
-							account.setHost(Smtp.COMMON_URLS[urlIndex] + host);
-							account.setPort(Smtp.COMMON_PORTS[portIndex]);
+							smptConfiguration.setHost(Smtp.COMMON_URLS[smtpUrlIndex] + host);
+							smptConfiguration.setPort(Smtp.COMMON_PORTS[smtpPortIndex]);
 
-							addLineToConsole("Trying " + account.getHost() + " on port " + account.getPort());
+							addLineToConsole("SMTP: Trying " + smptConfiguration.getHost() + " on port " + smptConfiguration.getPort());
 
 							try {
 
-								MailShareUtils.testAccount(account, password, context.getConfiguration().getTimeout());
+								MailShareUtils.testSmtpConfiguration(account, password, timeout);
 
-								addLineToConsole("Connection established!");
+								addLineToConsole("SMTP: Connection established!");
 
-								SmtpAccountFinderDialog.this.account = account;
+								boolean imapConfigurationFound = false;
+
+								ImapConfiguration imapConfguration = new ImapConfiguration();
+								account.setImapConfiguration(imapConfguration);
+
+								outerImapLoop: for (int imapUrlIndex = 0; imapUrlIndex < Imap.COMMON_URLS.length; imapUrlIndex++) {
+
+									for (int imapPortIndex = 0; imapPortIndex < Imap.COMMON_PORTS.length; imapPortIndex++) {
+
+										imapConfguration.setHost(Imap.COMMON_URLS[imapUrlIndex] + host);
+										imapConfguration.setPort(Imap.COMMON_PORTS[imapPortIndex]);
+
+										addLineToConsole("IMAP: Trying " + imapConfguration.getHost() + " on port " + imapConfguration.getPort());
+
+										try {
+
+											String sentFolderPath = MailShareUtils.findImapSentFolderPath(account, password, timeout);
+											if (sentFolderPath != null && sentFolderPath.length() > 0) {
+
+												imapConfguration.setSentFolderPath(sentFolderPath);
+												imapConfigurationFound = true;
+
+												addLineToConsole("IMAP: Connection established!");
+
+												break outerImapLoop;
+
+											}
+
+										} catch (Exception e) {
+											Communique.LOGGER.error("Exception while testing imap configuration: ", e); //$NON-NLS-1$
+											addLineToConsole("IMAP: Connection failed..");
+										}
+
+									}
+
+								}
+
+								if (!imapConfigurationFound) {
+									account.setImapConfiguration(null);
+								}
+
+								AccountFinderDialog.this.account = account;
 
 								SwingUtilities.invokeLater(new Runnable() {
 
@@ -93,13 +144,13 @@ public class SmtpAccountFinderDialog extends DefaultDialog {
 									}
 								});
 
-								break outerLoop;
+								break outerSmtpLoop;
 
 							} catch (Exception e) {
 
-								Communique.LOGGER.error("Exception while testing smtp account: ", e); //$NON-NLS-1$
+								Communique.LOGGER.error("Exception while testing smtp configuration: ", e); //$NON-NLS-1$
 
-								addLineToConsole("Connection failed..");
+								addLineToConsole("SMTP: Connection failed..");
 								/*
 								// TODO: MailerExceptopn is internal, how should we check for UnknownHostException's?
 								if ("Was unable to connect to SMTP server".equals(e.getMessage())) { //$NON-NLS-1$
@@ -167,7 +218,7 @@ public class SmtpAccountFinderDialog extends DefaultDialog {
 		return result;
 	}
 
-	public SmtpAccount getAccount() {
+	public Account getAccount() {
 		return account;
 	}
 

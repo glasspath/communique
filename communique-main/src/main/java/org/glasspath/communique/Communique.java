@@ -59,7 +59,7 @@ import org.glasspath.common.Common;
 import org.glasspath.common.font.Fonts;
 import org.glasspath.common.os.OsUtils;
 import org.glasspath.common.share.mail.Mailable;
-import org.glasspath.common.share.mail.account.SmtpAccount;
+import org.glasspath.common.share.mail.account.Account;
 import org.glasspath.common.swing.FrameContext;
 import org.glasspath.common.swing.color.ColorUtils;
 import org.glasspath.common.swing.dialog.DialogUtils;
@@ -70,9 +70,9 @@ import org.glasspath.communique.editor.EmailEditorContext;
 import org.glasspath.communique.editor.EmailEditorPanel;
 import org.glasspath.communique.icons.Icons;
 import org.glasspath.communique.tools.AccountTools;
-import org.glasspath.communique.tools.InsertTools;
 import org.glasspath.communique.tools.EmailToolBar;
 import org.glasspath.communique.tools.FileTools;
+import org.glasspath.communique.tools.InsertTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -284,7 +284,7 @@ public class Communique implements FrameContext {
 		fileTools.loadEmail(documentPath, templateFieldContext);
 	}
 
-	public SmtpAccount getAccount() {
+	public Account getAccount() {
 
 		if (configuration.getAccounts().size() > 0) {
 			if (configuration.getSelectedAccount() >= 0 && configuration.getSelectedAccount() < configuration.getAccounts().size()) {

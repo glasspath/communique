@@ -28,7 +28,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
-import org.glasspath.common.share.mail.account.SmtpAccount;
+import org.glasspath.common.share.mail.account.Account;
 import org.glasspath.communique.Communique;
 import org.glasspath.communique.account.AccountManagerDialog;
 import org.glasspath.communique.icons.Icons;
@@ -63,7 +63,7 @@ public class AccountTools {
 
 	public void refresh() {
 
-		SmtpAccount account = context.getAccount();
+		Account account = context.getAccount();
 		if (account != null) {
 			menu.setText(account.getName() != null ? account.getName() : account.getEmail());
 		} else {

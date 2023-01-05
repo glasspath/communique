@@ -22,7 +22,8 @@ import org.glasspath.common.share.appkit.AppKitShareUtils;
 import org.glasspath.common.share.mail.MailShareUtils;
 import org.glasspath.common.share.mail.MailUtils;
 import org.glasspath.common.share.mail.Mailable;
-import org.glasspath.common.share.mail.account.SmtpAccount;
+import org.glasspath.common.share.mail.account.Account;
+import org.glasspath.common.share.mail.account.SmtpConfiguration;
 import org.glasspath.common.share.mapi.MapiShareUtils;
 import org.glasspath.common.share.outlook.OutlookShareUtils;
 import org.glasspath.common.share.thunderbird.ThunderbirdShareUtils;
@@ -32,7 +33,7 @@ import org.glasspath.common.swing.dialog.DialogUtils;
 import org.glasspath.common.swing.dialog.LoginDialog;
 import org.glasspath.common.xml.XmlUtils;
 import org.glasspath.communique.account.AccountLoginDialog;
-import org.glasspath.communique.account.SmtpAccountFinderDialog;
+import org.glasspath.communique.account.AccountFinderDialog;
 import org.glasspath.communique.editor.EmailEditorPanel;
 
 public class CommuniqueUtils {
@@ -172,7 +173,7 @@ public class CommuniqueUtils {
 		return context.getMainPanel().getEmailEditor().getEmailContainer().toEmail();
 	}
 
-	public static void sendSmtp(Communique context, SmtpAccount account) throws ShareException {
+	public static void sendSmtp(Communique context, Account account) throws ShareException {
 
 		AccountLoginDialog loginDialog = new AccountLoginDialog(context, account == null ? "" : account.getEmail(), "", account == null, false); //$NON-NLS-1$ //$NON-NLS-2$
 		if (loginDialog.login() == LoginDialog.RESULT_OK) {
@@ -182,10 +183,10 @@ public class CommuniqueUtils {
 				String user = MailUtils.getEmailAddress(loginDialog.getUsername());
 				String host = MailUtils.getHostPart(loginDialog.getUsername());
 
-				SmtpAccountFinderDialog smtpAccountFinderDialog = new SmtpAccountFinderDialog(context, host, user, loginDialog.getPassword());
-				if (smtpAccountFinderDialog.getResult() == SmtpAccountFinderDialog.RESULT_OK && smtpAccountFinderDialog.getAccount() != null) {
+				AccountFinderDialog accountFinderDialog = new AccountFinderDialog(context, host, user, loginDialog.getPassword());
+				if (accountFinderDialog.getResult() == AccountFinderDialog.RESULT_OK && accountFinderDialog.getAccount() != null) {
 
-					account = smtpAccountFinderDialog.getAccount();
+					account = accountFinderDialog.getAccount();
 
 					context.getConfiguration().getAccounts().add(account);
 					context.getConfiguration().setSelectedAccount(context.getConfiguration().getAccounts().size() - 1);
@@ -198,7 +199,7 @@ public class CommuniqueUtils {
 
 			if (account != null) {
 
-				SmtpAccount selectedAccount = account;
+				Account selectedAccount = account;
 
 				JDialog busyDialog = DialogUtils.showBusyMessage(context.getFrame(), "Sending email", "Sending email..", true);
 
@@ -226,8 +227,15 @@ public class CommuniqueUtils {
 								// No need to set async to true because we already created a background thread
 								CompletableFuture<Void> future = MailShareUtils.sendSimpleEmail(simpleEmail, selectedAccount, loginDialog.getPassword(), context.getConfiguration().getTimeout(), false);
 								if (future != null) {
+
 									future.get();
+
+									if (selectedAccount.getImapConfiguration() != null) {
+										MailShareUtils.saveSimpleEmailToImapFolder(simpleEmail, selectedAccount, loginDialog.getPassword(), context.getConfiguration().getTimeout());
+									}
+
 									closeBusyDialog(null);
+
 								}
 
 							}
