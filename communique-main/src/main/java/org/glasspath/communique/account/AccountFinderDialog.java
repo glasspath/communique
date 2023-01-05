@@ -85,6 +85,7 @@ public class AccountFinderDialog extends DefaultDialog {
 							smptConfiguration.setHost(Smtp.COMMON_URLS[smtpUrlIndex] + host);
 							smptConfiguration.setPort(Smtp.COMMON_PORTS[smtpPortIndex]);
 
+							Communique.LOGGER.info("SMTP: Trying " + smptConfiguration.getHost() + " on port " + smptConfiguration.getPort());
 							addLineToConsole("SMTP: Trying " + smptConfiguration.getHost() + " on port " + smptConfiguration.getPort());
 
 							try {
@@ -105,6 +106,7 @@ public class AccountFinderDialog extends DefaultDialog {
 										imapConfguration.setHost(Imap.COMMON_URLS[imapUrlIndex] + host);
 										imapConfguration.setPort(Imap.COMMON_PORTS[imapPortIndex]);
 
+										Communique.LOGGER.info("IMAP: Trying " + imapConfguration.getHost() + " on port " + imapConfguration.getPort());
 										addLineToConsole("IMAP: Trying " + imapConfguration.getHost() + " on port " + imapConfguration.getPort());
 
 										try {
