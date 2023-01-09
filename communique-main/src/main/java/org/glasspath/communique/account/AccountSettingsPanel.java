@@ -126,6 +126,8 @@ public class AccountSettingsPanel extends JPanel {
 
 		updating = false;
 
+		repaint();
+
 	}
 
 	@Override
@@ -155,13 +157,13 @@ public class AccountSettingsPanel extends JPanel {
 
 		smtpConfigurationPanel.enabledCheckBox.setSelected(true);
 		smtpConfigurationPanel.hostTextField.setText("");
-		smtpConfigurationPanel.portSpinner.setValue(0);
-		smtpConfigurationPanel.protocolComboBox.setSelectedItem(Smtp.Protocol.SMTPS);
+		smtpConfigurationPanel.portSpinner.setValue(Smtp.DEFAULT_PORT);
+		smtpConfigurationPanel.protocolComboBox.setSelectedItem(Smtp.DEFAULT_PROTOCOL);
 
 		imapConfigurationPanel.enabledCheckBox.setSelected(false);
 		imapConfigurationPanel.hostTextField.setText("");
-		imapConfigurationPanel.portSpinner.setValue(0);
-		imapConfigurationPanel.protocolComboBox.setSelectedItem(Imap.Protocol.IMAPS);
+		imapConfigurationPanel.portSpinner.setValue(Imap.DEFAULT_PORT);
+		imapConfigurationPanel.protocolComboBox.setSelectedItem(Imap.DEFAULT_PROTOCOL);
 		imapConfigurationPanel.sentFolderPathTextField.setText("");
 
 	}
