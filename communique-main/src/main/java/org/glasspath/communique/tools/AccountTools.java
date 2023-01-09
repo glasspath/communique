@@ -25,8 +25,10 @@ package org.glasspath.communique.tools;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.SwingUtilities;
 
 import org.glasspath.common.share.mail.account.Account;
 import org.glasspath.communique.Communique;
@@ -37,6 +39,7 @@ public class AccountTools {
 
 	private final Communique context;
 	private final JMenu menu;
+	private final JMenu switchAccountMenu;
 
 	public AccountTools(Communique context) {
 
@@ -45,13 +48,17 @@ public class AccountTools {
 		menu = new JMenu("Account");
 		menu.setIcon(Icons.accountOutline);
 
-		JMenuItem manageAccountsMenuItem = new JMenuItem("Manage accounts");
+		switchAccountMenu = new JMenu("Switch Account");
+		menu.add(switchAccountMenu);
+
+		JMenuItem manageAccountsMenuItem = new JMenuItem("Manage Accounts");
 		menu.add(manageAccountsMenuItem);
 		manageAccountsMenuItem.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				new AccountManagerDialog(context).setVisible(true);
+				refresh();
 			}
 		});
 
@@ -62,6 +69,44 @@ public class AccountTools {
 	}
 
 	public void refresh() {
+
+		switchAccountMenu.removeAll();
+		if (context.getConfiguration().getAccounts().size() > 1) {
+
+			for (int i = 0; i < context.getConfiguration().getAccounts().size(); i++) {
+
+				Account account = context.getConfiguration().getAccounts().get(i);
+
+				int index = i;
+
+				JCheckBoxMenuItem accountMenuItem = new JCheckBoxMenuItem(account.getName() != null && account.getName().length() > 0 ? account.getName() : account.getEmail());
+				switchAccountMenu.add(accountMenuItem);
+				accountMenuItem.setSelected(context.getConfiguration().getSelectedAccount() == i);
+				accountMenuItem.addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+
+						context.getConfiguration().setSelectedAccount(index);
+
+						SwingUtilities.invokeLater(new Runnable() {
+
+							@Override
+							public void run() {
+								refresh();
+							}
+						});
+
+					}
+				});
+
+			}
+
+			switchAccountMenu.setEnabled(true);
+
+		} else {
+			switchAccountMenu.setEnabled(false);
+		}
 
 		Account account = context.getAccount();
 		if (account != null) {

@@ -43,18 +43,18 @@ public class AccountFinderDialog extends DefaultDialog {
 	private Account account = null;
 	private int result = RESULT_CANCEL;
 
-	public AccountFinderDialog(Communique context, String email, String password) {
+	public AccountFinderDialog(Communique context, String email, String password, String okButtonText) {
 		super(context);
 
 		setTitle("Create Account");
 		getHeader().setTitle("Finding account settings");
-		setPreferredSize(DIALOG_SIZE_DEFAULT);
+		setPreferredSize(adjustSize(DIALOG_SIZE_DEFAULT, -50, 0));
 		getContentPanel().setBorder(BorderFactory.createEmptyBorder());
 
 		console = new Console();
 		getContentPanel().add(console);
 
-		getOkButton().setText("Send");
+		getOkButton().setText(okButtonText);
 		getOkButton().setVisible(false);
 
 		new Thread(new Runnable() {

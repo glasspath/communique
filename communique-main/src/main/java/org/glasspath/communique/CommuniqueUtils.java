@@ -182,7 +182,7 @@ public class CommuniqueUtils {
 
 				String email = MailUtils.getEmailAddress(loginDialog.getUsername());
 
-				AccountFinderDialog accountFinderDialog = new AccountFinderDialog(context, email, loginDialog.getPassword());
+				AccountFinderDialog accountFinderDialog = new AccountFinderDialog(context, email, loginDialog.getPassword(), "Send"); //$NON-NLS-1$
 				if (accountFinderDialog.getResult() == AccountFinderDialog.RESULT_OK && accountFinderDialog.getAccount() != null) {
 
 					account = accountFinderDialog.getAccount();
@@ -286,6 +286,8 @@ public class CommuniqueUtils {
 
 			}
 
+		} catch (ShareException e) {
+			throw e;
 		} catch (Exception e) {
 			throw new ShareException("Exception while exporting to .eml: ", e); //$NON-NLS-1$
 		}
@@ -305,6 +307,8 @@ public class CommuniqueUtils {
 			// Mailto doesn't support attachments, let's open the location so the user can drag it to the email
 			openAttachmentsLocations(mailable);
 
+		} catch (ShareException e) {
+			throw e;
 		} catch (Exception e) {
 			throw new ShareException("Exception while sharing email through mailto", e); //$NON-NLS-1$
 		}
@@ -324,6 +328,8 @@ public class CommuniqueUtils {
 			// Gmail compose doesn't support attachments, let's open the location so the user can drag it to the email
 			openAttachmentsLocations(mailable);
 
+		} catch (ShareException e) {
+			throw e;
 		} catch (Exception e) {
 			throw new ShareException("Exception while sharing email through gmail compose", e); //$NON-NLS-1$
 		}
@@ -343,6 +349,8 @@ public class CommuniqueUtils {
 			// Outlook live compose doesn't support attachments, let's open the location so the user can drag it to the email
 			openAttachmentsLocations(mailable);
 
+		} catch (ShareException e) {
+			throw e;
 		} catch (Exception e) {
 			throw new ShareException("Exception while sharing email through outlook live compose", e); //$NON-NLS-1$
 		}
@@ -357,6 +365,8 @@ public class CommuniqueUtils {
 
 			MapiShareUtils.createEmail(mailable);
 
+		} catch (ShareException e) {
+			throw e;
 		} catch (Exception e) {
 			throw new ShareException("Exception while sharing email through Mapi", e); //$NON-NLS-1$
 		}
@@ -371,6 +381,8 @@ public class CommuniqueUtils {
 
 			OutlookShareUtils.createEmail(mailable);
 
+		} catch (ShareException e) {
+			throw e;
 		} catch (Exception e) {
 			throw new ShareException("Exception while sharing email through Outlook (COM)", e); //$NON-NLS-1$
 		}
@@ -385,6 +397,8 @@ public class CommuniqueUtils {
 
 			OutlookShareUtils.createCommandLineEmail(mailable);
 
+		} catch (ShareException e) {
+			throw e;
 		} catch (Exception e) {
 			throw new ShareException("Exception while sharing email through Outlook (command line)", e); //$NON-NLS-1$
 		}
@@ -399,6 +413,8 @@ public class CommuniqueUtils {
 
 			ThunderbirdShareUtils.createCommandLineEmail(mailable);
 
+		} catch (ShareException e) {
+			throw e;
 		} catch (Exception e) {
 			throw new ShareException("Exception while sharing email through Thunderbird (command line)", e); //$NON-NLS-1$
 		}
@@ -418,6 +434,8 @@ public class CommuniqueUtils {
 
 			UwpShareUtils.showShareMenu(context.getFrame(), mailable, null, assemblyResolvePath);
 
+		} catch (ShareException e) {
+			throw e;
 		} catch (Exception e) {
 			throw new ShareException("Exception while sharing email through UWP share menu", e); //$NON-NLS-1$
 		}
@@ -432,6 +450,8 @@ public class CommuniqueUtils {
 
 			AppKitShareUtils.createEmail(mailable);
 
+		} catch (ShareException e) {
+			throw e;
 		} catch (Exception e) {
 			throw new ShareException("Exception while sharing email through AppKit", e); //$NON-NLS-1$
 		}
