@@ -23,7 +23,6 @@ import org.glasspath.common.share.mail.MailShareUtils;
 import org.glasspath.common.share.mail.MailUtils;
 import org.glasspath.common.share.mail.Mailable;
 import org.glasspath.common.share.mail.account.Account;
-import org.glasspath.common.share.mail.account.SmtpConfiguration;
 import org.glasspath.common.share.mapi.MapiShareUtils;
 import org.glasspath.common.share.outlook.OutlookShareUtils;
 import org.glasspath.common.share.thunderbird.ThunderbirdShareUtils;
@@ -32,8 +31,8 @@ import org.glasspath.common.swing.DesktopUtils;
 import org.glasspath.common.swing.dialog.DialogUtils;
 import org.glasspath.common.swing.dialog.LoginDialog;
 import org.glasspath.common.xml.XmlUtils;
-import org.glasspath.communique.account.AccountLoginDialog;
 import org.glasspath.communique.account.AccountFinderDialog;
+import org.glasspath.communique.account.AccountLoginDialog;
 import org.glasspath.communique.editor.EmailEditorPanel;
 
 public class CommuniqueUtils {
@@ -300,7 +299,7 @@ public class CommuniqueUtils {
 
 		try {
 
-			URI mailtoURI = MailUtils.createMailtoUri(mailable);
+			URI mailtoURI = MailShareUtils.createMailtoUri(mailable);
 
 			DesktopUtils.mail(mailtoURI);
 
@@ -321,7 +320,7 @@ public class CommuniqueUtils {
 
 		try {
 
-			URI gmailComposeURI = MailUtils.createGmailComposeUri(mailable);
+			URI gmailComposeURI = MailShareUtils.createGmailComposeUri(mailable);
 
 			DesktopUtils.browse(gmailComposeURI);
 
@@ -342,7 +341,7 @@ public class CommuniqueUtils {
 
 		try {
 
-			URI outlookLiveComposeURI = MailUtils.createOutlookLiveComposeUri(mailable);
+			URI outlookLiveComposeURI = MailShareUtils.createOutlookLiveComposeUri(mailable);
 
 			DesktopUtils.browse(outlookLiveComposeURI);
 
