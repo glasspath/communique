@@ -480,13 +480,6 @@ public class Communique implements FrameContext {
 				toolBarPanel.middle.add(viewTools.getViewModeToolBar());
 			}
 
-			/*
-			toolBarPanel.add(filter.getToolBar());
-			if (dateFilterTools != null) {
-				toolBarPanel.add(dateFilterTools.getToolBar());
-			}
-			*/
-
 		}
 
 		toolBarPanel.revalidate();

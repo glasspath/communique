@@ -85,7 +85,7 @@ public class MainPanel extends AbstractMainPanel<Communique> {
 					// TODO
 					// oldPageViews.addAll(documentEditor.getPageContainer().getPageViews());
 
-					updateDocumentEditor();
+					updateEmailEditor();
 
 					// TODO
 					// newPageViews.addAll(documentEditor.getPageContainer().getPageViews());
@@ -118,12 +118,11 @@ public class MainPanel extends AbstractMainPanel<Communique> {
 
 	}
 
-	private void updateDocumentEditor() {
+	private void updateEmailEditor() {
 
 		try {
-			Document document = xmlMapper.readValue(sourceEditor.getSource(), Document.class);
-			// TODO
-			// documentEditor.getPageContainer().init(document);
+			Email email = xmlMapper.readValue(sourceEditor.getSource(), Email.class);
+			emailEditor.getEmailContainer().init(email);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

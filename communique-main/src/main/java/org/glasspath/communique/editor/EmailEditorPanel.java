@@ -104,15 +104,6 @@ public class EmailEditorPanel extends EditorPanel<EmailEditorPanel> {
 
 		emailContainer = new EditorEmailContainer();
 
-		/*
-		JLayer<JPanel> pageContainerLayer = new JLayer<JPanel>(pageContainer, view);
-		
-		JPanel pageContainerWrapper = new JPanel();
-		pageContainerWrapper.setLayout(new BorderLayout());
-		pageContainerWrapper.add(pageContainerLayer, BorderLayout.CENTER);
-		
-		mainScrollPane = new JScrollPane(pageContainerWrapper);
-		*/
 		mainScrollPane = new JScrollPane(emailContainer);
 		mainScrollPane.setBorder(BorderFactory.createEmptyBorder());
 		mainScrollPane.getVerticalScrollBar().setUnitIncrement(25);
