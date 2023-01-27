@@ -29,9 +29,6 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
@@ -51,6 +48,7 @@ import org.glasspath.aerialist.editor.actions.ActionUtils;
 import org.glasspath.aerialist.media.MediaCache;
 import org.glasspath.aerialist.swing.view.EmailContainer;
 import org.glasspath.aerialist.swing.view.ISwingElementView;
+import org.glasspath.aerialist.swing.view.ISwingViewContext;
 import org.glasspath.aerialist.swing.view.PageView;
 import org.glasspath.aerialist.swing.view.TableView;
 import org.glasspath.aerialist.swing.view.TextView;
@@ -262,21 +260,7 @@ public class EmailEditorPanel extends EditorPanel<EmailEditorPanel> {
 		public EditorEmailContainer() {
 			super(Theme.isDark() ? new Color(48, 50, 52) : Color.white);
 
-			setFocusable(true);
-			addFocusListener(new FocusAdapter() {
-
-				@Override
-				public void focusGained(FocusEvent e) {
-					EditorEmailContainer.this.focusGained(emailContainer);
-				}
-			});
-			addMouseListener(new MouseAdapter() {
-
-				@Override
-				public void mousePressed(MouseEvent e) {
-					requestFocusInWindow();
-				}
-			});
+			ISwingViewContext.installSelectionHandler(this, this);
 
 			// TODO?
 			setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
@@ -313,6 +297,11 @@ public class EmailEditorPanel extends EditorPanel<EmailEditorPanel> {
 				}
 			});
 
+		}
+
+		@Override
+		public boolean isRightMouseSelectionAllowed() {
+			return selection.size() <= 1;
 		}
 
 		@Override
