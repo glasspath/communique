@@ -127,7 +127,7 @@ public class EmailEditorPanel extends EditorPanel<EmailEditorPanel> {
 	@Override
 	public void undoableEditHappened(UndoableEdit edit) {
 		super.undoableEditHappened(edit);
-		context.setSomethingChanged(true);
+		context.setContentChanged(true);
 	}
 
 	public EditorEmailContainer getEmailContainer() {

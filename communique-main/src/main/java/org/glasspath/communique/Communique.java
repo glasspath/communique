@@ -127,7 +127,7 @@ public class Communique implements FrameContext {
 
 	// TODO
 	private boolean sourceEditorEnabled = false;
-	private boolean somethingChanged = false;
+	private boolean contentChanged = false;
 
 	public Communique(EmailEditorContext editorContext, IFieldContext templateFieldContext, String openFile) {
 
@@ -369,13 +369,13 @@ public class Communique implements FrameContext {
 	}
 
 	@Override
-	public void setSomethingChanged(boolean somethingChanged) {
-		this.somethingChanged = somethingChanged;
+	public void setContentChanged(boolean changed) {
+		this.contentChanged = changed;
 		updateTitle();
 	}
 
-	public boolean isSomethingChanged() {
-		return somethingChanged;
+	public boolean isContentChanged() {
+		return contentChanged;
 	}
 
 	private void updateTitle() {
@@ -396,7 +396,7 @@ public class Communique implements FrameContext {
 			title += " - " + fileName;
 		}
 
-		if (somethingChanged) {
+		if (contentChanged) {
 			title += "*";
 		}
 

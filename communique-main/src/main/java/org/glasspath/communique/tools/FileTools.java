@@ -210,7 +210,7 @@ public class FileTools {
 		if (checkFileSaved()) {
 
 			currentFilePath = null;
-			context.setSomethingChanged(false);
+			context.setContentChanged(false);
 
 			context.getUndoActions().getUndoManager().discardAllEdits();
 			context.getUndoActions().updateActions();
@@ -252,7 +252,7 @@ public class FileTools {
 
 			boolean saved = saveCurrentEmail(currentFilePath);
 			if (saved) {
-				context.setSomethingChanged(false);
+				context.setContentChanged(false);
 			}
 
 			return saved;
@@ -280,7 +280,7 @@ public class FileTools {
 
 			if (saved) {
 				currentFilePath = newFilePath;
-				context.setSomethingChanged(false);
+				context.setContentChanged(false);
 			}
 
 		}
@@ -292,7 +292,7 @@ public class FileTools {
 	public void loadEmail(String emailPath, IFieldContext templateFieldContext) {
 
 		currentFilePath = null;
-		context.setSomethingChanged(false);
+		context.setContentChanged(false);
 
 		EmailEditorPanel editor = context.getMainPanel().getEmailEditor();
 		editor.getSelection().clear();
@@ -311,7 +311,7 @@ public class FileTools {
 				// because this would overwrite the template email when saving
 				if (templateFieldContext == null) {
 					currentFilePath = emailPath;
-					context.setSomethingChanged(false);
+					context.setContentChanged(false);
 				}
 
 			}
@@ -364,7 +364,7 @@ public class FileTools {
 
 	public boolean checkFileSaved() {
 
-		if (context.isSomethingChanged()) {
+		if (context.isContentChanged()) {
 
 			int chosenOption = JOptionPane.showOptionDialog(context.getFrame(), "The file has been modified, save changes?", "Save changes?", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[] { "Yes", "No", "Cancel" }, "Cancel");
 
