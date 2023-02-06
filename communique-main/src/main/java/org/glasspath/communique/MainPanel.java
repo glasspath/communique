@@ -142,4 +142,9 @@ public class MainPanel extends AbstractMainPanel<Communique> {
 
 	}
 
+	public void updateEditMenu() {
+		emailEditor.populateEditMenu(context.getEditTools().prepareMenu());
+		context.getEditTools().finishMenu();
+	}
+	
 }

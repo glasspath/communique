@@ -29,15 +29,16 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.event.FocusEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
 import javax.swing.BorderFactory;
-import javax.swing.JComponent;
 import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
+import javax.swing.event.CaretEvent;
 import javax.swing.undo.UndoableEdit;
 
 import org.glasspath.aerialist.AerialistUtils;
@@ -53,6 +54,7 @@ import org.glasspath.aerialist.swing.view.PageView;
 import org.glasspath.aerialist.swing.view.TableView;
 import org.glasspath.aerialist.swing.view.TextView;
 import org.glasspath.aerialist.text.font.FontCache;
+import org.glasspath.common.swing.selection.SelectionListener;
 import org.glasspath.common.swing.theme.Theme;
 import org.glasspath.communique.Communique;
 
@@ -106,6 +108,15 @@ public class EmailEditorPanel extends EditorPanel<EmailEditorPanel> {
 		mainScrollPane.setBorder(BorderFactory.createEmptyBorder());
 		mainScrollPane.getVerticalScrollBar().setUnitIncrement(25);
 		add(mainScrollPane, BorderLayout.CENTER);
+
+		selection.addSelectionListener(new SelectionListener() {
+
+			@Override
+			public void selectionChanged() {
+				context.getMainPanel().updateEditMenu();
+				context.getTextFormatTools().textSelectionChanged();
+			}
+		});
 
 	}
 
@@ -255,6 +266,10 @@ public class EmailEditorPanel extends EditorPanel<EmailEditorPanel> {
 
 	}
 
+	public void populateEditMenu(JMenu menu) {
+		// TODO?
+	}
+
 	public class EditorEmailContainer extends EmailContainer {
 
 		public EditorEmailContainer() {
@@ -305,10 +320,11 @@ public class EmailEditorPanel extends EditorPanel<EmailEditorPanel> {
 		}
 
 		@Override
-		public void focusGained(JComponent component) {
+		public void focusGained(FocusEvent e) {
 
 			selection.clear();
 
+			Component component = e.getComponent();
 			ISwingElementView<?> elementView = AerialistUtils.getEmailElementView(component);
 			if (component != this && elementView != null) {
 				selection.add(component);
@@ -318,6 +334,16 @@ public class EmailEditorPanel extends EditorPanel<EmailEditorPanel> {
 
 			repaint();
 
+		}
+
+		@Override
+		public void focusLost(FocusEvent e) {
+
+		}
+
+		@Override
+		public void caretUpdate(CaretEvent e) {
+			context.getTextFormatTools().textSelectionChanged();
 		}
 
 		@Override

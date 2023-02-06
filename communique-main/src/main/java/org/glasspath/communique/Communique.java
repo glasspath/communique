@@ -51,12 +51,14 @@ import org.glasspath.aerialist.IFieldContext;
 import org.glasspath.aerialist.XDoc;
 import org.glasspath.aerialist.editor.EditorContext;
 import org.glasspath.aerialist.editor.EditorPanel;
+import org.glasspath.aerialist.text.font.FontWeight;
 import org.glasspath.aerialist.tools.EditTools;
 import org.glasspath.aerialist.tools.TextFormatTools;
 import org.glasspath.aerialist.tools.UndoActions;
 import org.glasspath.aerialist.tools.ViewTools;
 import org.glasspath.common.Common;
 import org.glasspath.common.font.Fonts;
+import org.glasspath.common.font.Fonts.FontFilter;
 import org.glasspath.common.os.OsUtils;
 import org.glasspath.common.share.mail.Mailable;
 import org.glasspath.common.share.mail.account.Account;
@@ -146,7 +148,23 @@ public class Communique implements FrameContext {
 		this.emailToolBar = new EmailToolBar(this, editorContext);
 		this.textFormatTools = new TextFormatTools(mainPanel.getEmailEditor());
 
-		textFormatTools.setFontFamilyNames(Fonts.BASIC_FONT_FAMILIES, Fonts.DEFAULT_BASIC_FONT_FAMILY);
+		// TODO: For now we also register bundled fonts here even though we don't use them, we do this because
+		// the email editor may try to load the default font (currently Roboto), if this font is not found AWT
+		// will use another font, registering the default font after that will not update it correctly..
+		Fonts.registerBundledFonts(APPLICATION_CLASS, new FontFilter() {
+
+			@Override
+			public boolean filter(File file) {
+
+				String name = file.getName().toLowerCase().replaceAll("[^A-Za-z0-9]", "");
+				FontWeight weight = FontWeight.getFontWeight(name);
+
+				return weight == FontWeight.REGULAR || weight == FontWeight.BOLD;
+
+			}
+		});
+
+		textFormatTools.setFontFamilyNames(Fonts.BASIC_FONT_FAMILIES);
 		fileTools.setExportActionsEnabled(true);
 
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -252,29 +270,8 @@ public class Communique implements FrameContext {
 		accountTools.refresh();
 
 		frame.setVisible(true);
-		// mainPanel.getDocumentEditor().tempTest();
 
 	}
-
-	/*
-	private void tempTestSetEditorContext() {
-	
-		TemplateMetadata templateMetadata = new TemplateMetadata();
-	
-		CategoryMetadata root = new CategoryMetadata("");
-		root.getChildren().add(InvoiceTemplateUtils.createInvoiceTemplateMetadata());
-		templateMetadata.setRoot(root);
-	
-		setEditorContext(new EditorContext(templateMetadata) {
-	
-			@Override
-			public void populateInsertElementMenu(EditorPanel context, JMenu menu) {
-				// TODO?
-			}
-		});
-	
-	}
-	*/
 
 	public Configuration getConfiguration() {
 		return configuration;
