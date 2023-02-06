@@ -151,14 +151,12 @@ public class Communique implements FrameContext {
 		// TODO: For now we also register bundled fonts here even though we don't use them, we do this because
 		// the email editor may try to load the default font (currently Roboto), if this font is not found AWT
 		// will use another font, registering the default font after that will not update it correctly..
-		LOGGER.info("Loading fonts: " + APPLICATION_CLASS);
 		Fonts.registerBundledFonts(APPLICATION_CLASS, new FontFilter() {
 
 			@Override
 			public boolean filter(File file) {
 
 				String name = file.getName().toLowerCase().replaceAll("[^A-Za-z0-9]", "");
-				LOGGER.info("Loading font: " + file.getAbsolutePath());
 				FontWeight weight = FontWeight.getFontWeight(name);
 
 				return weight == FontWeight.REGULAR || weight == FontWeight.BOLD;
@@ -180,7 +178,7 @@ public class Communique implements FrameContext {
 			rootPane.putClientProperty("apple.awt.fullWindowContent", true);
 			rootPane.putClientProperty("apple.awt.transparentTitleBar", false);
 		}
-		*/
+		 */
 
 		FrameUtils.loadFrameDimensions(frame, PREFERENCES);
 
