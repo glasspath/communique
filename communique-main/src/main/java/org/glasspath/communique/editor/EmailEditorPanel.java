@@ -362,6 +362,15 @@ public class EmailEditorPanel extends EditorPanel<EmailEditorPanel> {
 		}
 
 		@Override
+		public int getContainerPaintFlags() {
+			return ISwingViewContext.CONTAINER_PAINT_FLAG_EDITABLE;
+		}
+
+		public int getViewPaintFlags(Component view) {
+			return ISwingViewContext.VIEW_PAINT_FLAG_DECORATE_FIELDS;
+		}
+
+		@Override
 		public void paint(Graphics g) {
 
 			Graphics2D g2d = (Graphics2D) g;
