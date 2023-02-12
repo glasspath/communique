@@ -55,7 +55,6 @@ import org.glasspath.aerialist.text.font.FontWeight;
 import org.glasspath.aerialist.tools.EditTools;
 import org.glasspath.aerialist.tools.TextFormatTools;
 import org.glasspath.aerialist.tools.UndoActions;
-import org.glasspath.aerialist.tools.ViewTools;
 import org.glasspath.common.Common;
 import org.glasspath.common.font.Fonts;
 import org.glasspath.common.font.Fonts.FontFilter;
@@ -75,6 +74,7 @@ import org.glasspath.communique.tools.AccountTools;
 import org.glasspath.communique.tools.EmailToolBar;
 import org.glasspath.communique.tools.FileTools;
 import org.glasspath.communique.tools.InsertTools;
+import org.glasspath.communique.tools.ViewTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -140,10 +140,11 @@ public class Communique implements FrameContext {
 		this.undoActions = new UndoActions();
 		this.mainPanel = new MainPanel(this, editorContext);
 		this.statusBar = new StatusBar();
+		statusBar.setVisible(false); // TODO
 		this.fileTools = new FileTools(this);
 		this.editTools = new EditTools(undoActions);
 		this.insertTools = new InsertTools(this);
-		this.viewTools = new ViewTools(mainPanel);
+		this.viewTools = new ViewTools(this);
 		this.accountTools = new AccountTools(this);
 		this.emailToolBar = new EmailToolBar(this, editorContext);
 		this.textFormatTools = new TextFormatTools(mainPanel.getEmailEditor());
@@ -187,9 +188,9 @@ public class Communique implements FrameContext {
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.add(fileTools.getMenu());
 		menuBar.add(editTools.getMenu());
+		menuBar.add(viewTools.getMenu());
 		menuBar.add(insertTools.getMenu());
 		menuBar.add(accountTools.getMenu());
-		// menuBar.add(formatTools.getMenu()); // TODO?
 		frame.setJMenuBar(menuBar);
 
 		statusBar.setPreferredSize(new Dimension(100, 20));
@@ -200,7 +201,7 @@ public class Communique implements FrameContext {
 
 		frame.getContentPane().add(toolBarPanel, BorderLayout.NORTH);
 		frame.getContentPane().add(mainPanel, BorderLayout.CENTER);
-		// frame.getContentPane().add(statusBar, BorderLayout.SOUTH);
+		frame.getContentPane().add(statusBar, BorderLayout.SOUTH);
 
 		undoActions.addActionListener(new ActionListener() {
 
@@ -433,6 +434,35 @@ public class Communique implements FrameContext {
 		return undoActions;
 	}
 
+	public void setFileToolsVisible(boolean visible) {
+		fileTools.getToolBar().setVisible(visible);
+		revalidateFrame();
+	}
+
+	public void setEditToolsVisible(boolean visible) {
+		editTools.getToolBar().setVisible(visible);
+		revalidateFrame();
+	}
+
+	public void setInsertToolsVisible(boolean visible) {
+		insertTools.getToolBar().setVisible(visible);
+		revalidateFrame();
+	}
+
+	public void setTextFormatToolsVisible(boolean visible) {
+		textFormatTools.getToolBar().setVisible(visible);
+		revalidateFrame();
+	}
+
+	public boolean isStatusBarVisible() {
+		return statusBar.isVisible();
+	}
+
+	public void setStatusBarVisible(boolean visible) {
+		statusBar.setVisible(visible);
+		revalidateFrame();
+	}
+
 	public boolean isSourceEditorEnabled() {
 		return sourceEditorEnabled;
 	}
@@ -444,6 +474,12 @@ public class Communique implements FrameContext {
 
 	public EditorContext<EmailEditorPanel> getEditorContext() {
 		return mainPanel.getEmailEditor().getEditorContext();
+	}
+
+	private void revalidateFrame() {
+		frame.invalidate();
+		frame.validate();
+		frame.repaint();
 	}
 
 	public void showTools(List<JToolBar> toolBars) {
