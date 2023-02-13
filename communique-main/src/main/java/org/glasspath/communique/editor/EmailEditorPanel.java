@@ -53,6 +53,7 @@ import org.glasspath.aerialist.swing.view.ISwingViewContext;
 import org.glasspath.aerialist.swing.view.PageView;
 import org.glasspath.aerialist.swing.view.TableView;
 import org.glasspath.aerialist.swing.view.TextView;
+import org.glasspath.aerialist.swing.view.ISwingViewContext.ViewEvent;
 import org.glasspath.aerialist.text.font.FontCache;
 import org.glasspath.common.swing.selection.SelectionListener;
 import org.glasspath.common.swing.theme.Theme;
@@ -344,6 +345,11 @@ public class EmailEditorPanel extends EditorPanel<EmailEditorPanel> {
 		@Override
 		public void caretUpdate(CaretEvent e) {
 			context.getTextFormatTools().textSelectionChanged();
+		}
+
+		@Override
+		public void viewEventHappened(ViewEvent viewEvent) {
+
 		}
 
 		@Override
