@@ -53,7 +53,6 @@ import org.glasspath.aerialist.swing.view.ISwingViewContext;
 import org.glasspath.aerialist.swing.view.PageView;
 import org.glasspath.aerialist.swing.view.TableView;
 import org.glasspath.aerialist.swing.view.TextView;
-import org.glasspath.aerialist.swing.view.ISwingViewContext.ViewEvent;
 import org.glasspath.aerialist.text.font.FontCache;
 import org.glasspath.common.swing.selection.SelectionListener;
 import org.glasspath.common.swing.theme.Theme;
@@ -381,9 +380,11 @@ public class EmailEditorPanel extends EditorPanel<EmailEditorPanel> {
 
 			Graphics2D g2d = (Graphics2D) g;
 
-			view.drawEditorBackground(g2d, this);
+			boolean editable = ISwingViewContext.getContainerPaintFlag(this, ISwingViewContext.CONTAINER_PAINT_FLAG_EDITABLE);
+
+			view.drawEditorBackground(g2d, this, editable);
 			super.paint(g);
-			view.drawEditorForeground(g2d, this);
+			view.drawEditorForeground(g2d, this, editable);
 
 		}
 
