@@ -73,6 +73,7 @@ import org.glasspath.communique.icons.Icons;
 import org.glasspath.communique.tools.AccountTools;
 import org.glasspath.communique.tools.EmailToolBar;
 import org.glasspath.communique.tools.FileTools;
+import org.glasspath.communique.tools.HelpTools;
 import org.glasspath.communique.tools.InsertTools;
 import org.glasspath.communique.tools.ViewTools;
 import org.slf4j.Logger;
@@ -81,8 +82,8 @@ import org.slf4j.LoggerFactory;
 @SuppressWarnings("nls")
 public class Communique implements FrameContext {
 
-	public static boolean TEMP_TEST_STANDALONE = true;
-	public static Class<?> APPLICATION_CLASS = Communique.class;
+	public static boolean TEMP_TEST_STANDALONE = true; // TODO
+	public static Class<?> APPLICATION_CLASS = Communique.class; // TODO
 
 	public static final int VERSION_CODE = 1;
 	public static final String VERSION_NAME = "1.0";
@@ -126,6 +127,7 @@ public class Communique implements FrameContext {
 	private final AccountTools accountTools;
 	private final EmailToolBar emailToolBar;
 	private final TextFormatTools textFormatTools;
+	private final HelpTools helpTools;
 
 	// TODO
 	private boolean sourceEditorEnabled = false;
@@ -148,6 +150,7 @@ public class Communique implements FrameContext {
 		this.accountTools = new AccountTools(this);
 		this.emailToolBar = new EmailToolBar(this, editorContext);
 		this.textFormatTools = new TextFormatTools(mainPanel.getEmailEditor());
+		this.helpTools = new HelpTools(this);
 
 		// TODO: For now we also register bundled fonts here even though we don't use them, we do this because
 		// the email editor may try to load the default font (currently Roboto), if this font is not found AWT
@@ -190,6 +193,7 @@ public class Communique implements FrameContext {
 		menuBar.add(editTools.getMenu());
 		menuBar.add(viewTools.getMenu());
 		menuBar.add(insertTools.getMenu());
+		menuBar.add(helpTools.getMenu());
 		menuBar.add(accountTools.getMenu());
 		frame.setJMenuBar(menuBar);
 
