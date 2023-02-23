@@ -204,7 +204,7 @@ public class FileTools {
 		exportEmlMenuItem.setEnabled(enabled);
 		exportHtmlMenuItem.setEnabled(enabled);
 	}
-	
+
 	private void newAction() {
 
 		if (checkFileSaved()) {
@@ -359,6 +359,33 @@ public class FileTools {
 		xDoc.setMediaCache(editor.getMediaCache());
 
 		return XDocWriter.write(xDoc, new File(path));
+
+	}
+
+	public void closeEmail() {
+
+		if (checkFileSaved()) {
+
+			currentFilePath = null;
+			context.setContentChanged(false);
+
+			context.getUndoActions().getUndoManager().discardAllEdits();
+			context.getUndoActions().updateActions();
+
+			EmailEditorPanel editor = context.getMainPanel().getEmailEditor();
+
+			editor.getSelection().clear();
+
+			Email email = AerialistUtils.createEmptyEmail();
+
+			context.getEmailToolBar().init(email);
+			editor.getEmailContainer().init(email);
+
+			editor.invalidate();
+			editor.validate();
+			editor.repaint();
+
+		}
 
 	}
 

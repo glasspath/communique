@@ -242,13 +242,17 @@ public class Communique implements FrameContext {
 						}
 					});
 
-					SwingUtilities.invokeLater(new Runnable() {
+					if (openFile != null) {
 
-						@Override
-						public void run() {
-							open(openFile, templateFieldContext);
-						}
-					});
+						SwingUtilities.invokeLater(new Runnable() {
+
+							@Override
+							public void run() {
+								openEmail(openFile, templateFieldContext);
+							}
+						});
+
+					}
 
 					frame.toFront();
 
@@ -282,8 +286,12 @@ public class Communique implements FrameContext {
 		return configuration;
 	}
 
-	public void open(String documentPath, IFieldContext templateFieldContext) {
-		fileTools.loadEmail(documentPath, templateFieldContext);
+	public void openEmail(String emailPath, IFieldContext templateFieldContext) {
+		fileTools.loadEmail(emailPath, templateFieldContext);
+	}
+
+	public void closeEmail() {
+		fileTools.closeEmail();
 	}
 
 	public Account getAccount() {
