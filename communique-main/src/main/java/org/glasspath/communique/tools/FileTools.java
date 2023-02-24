@@ -422,7 +422,7 @@ public class FileTools {
 
 			emailEditor.getEmailContainer().setExportPhase(ExportPhase.IDLE);
 
-			DesktopUtils.open("export.html");
+			DesktopUtils.open("export.html", context.getFrame());
 
 		} catch (DocumentException e) {
 			e.printStackTrace();

@@ -1,3 +1,25 @@
+/*
+ * This file is part of Glasspath Communique.
+ * Copyright (C) 2011 - 2022 Remco Poelstra
+ * Authors: Remco Poelstra
+ * 
+ * This program is offered under a commercial and under the AGPL license.
+ * For commercial licensing, contact us at https://glasspath.org. For AGPL licensing, see below.
+ * 
+ * AGPL licensing:
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 package org.glasspath.communique;
 
 import java.io.File;
@@ -9,6 +31,7 @@ import java.util.Map.Entry;
 import java.util.concurrent.CompletableFuture;
 
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import org.glasspath.aerialist.Content;
@@ -281,7 +304,7 @@ public class CommuniqueUtils {
 
 				File emlFile = new File(getTempDir(), "draft.eml"); // TODO?
 				MailShareUtils.exportToEml(simpleEmail, emlFile);
-				DesktopUtils.open(emlFile);
+				DesktopUtils.open(emlFile, context.getFrame());
 
 			}
 
@@ -304,7 +327,7 @@ public class CommuniqueUtils {
 			DesktopUtils.mail(mailtoURI);
 
 			// Mailto doesn't support attachments, let's open the location so the user can drag it to the email
-			openAttachmentsLocations(mailable);
+			openAttachmentsLocations(mailable, context.getFrame());
 
 		} catch (ShareException e) {
 			throw e;
@@ -325,7 +348,7 @@ public class CommuniqueUtils {
 			DesktopUtils.browse(gmailComposeURI);
 
 			// Gmail compose doesn't support attachments, let's open the location so the user can drag it to the email
-			openAttachmentsLocations(mailable);
+			openAttachmentsLocations(mailable, context.getFrame());
 
 		} catch (ShareException e) {
 			throw e;
@@ -346,7 +369,7 @@ public class CommuniqueUtils {
 			DesktopUtils.browse(outlookLiveComposeURI);
 
 			// Outlook live compose doesn't support attachments, let's open the location so the user can drag it to the email
-			openAttachmentsLocations(mailable);
+			openAttachmentsLocations(mailable, context.getFrame());
 
 		} catch (ShareException e) {
 			throw e;
@@ -457,7 +480,7 @@ public class CommuniqueUtils {
 
 	}
 
-	public static void openAttachmentsLocations(Mailable mailable) {
+	public static void openAttachmentsLocations(Mailable mailable, JFrame frame) {
 
 		// TODO: For multiple attachments we should check if they are all in the same location
 		if (mailable.getAttachments() != null && mailable.getAttachments().size() == 1) {
@@ -466,7 +489,7 @@ public class CommuniqueUtils {
 
 				File attachment = new File(mailable.getAttachments().get(0));
 				if (attachment.exists() && !attachment.isDirectory()) {
-					DesktopUtils.open(attachment.getParent());
+					DesktopUtils.open(attachment.getParent(), frame);
 				}
 
 			} catch (Exception e) {

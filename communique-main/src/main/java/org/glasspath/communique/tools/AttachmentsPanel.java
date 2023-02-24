@@ -289,7 +289,7 @@ public class AttachmentsPanel extends JPanel {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					DesktopUtils.open(attachment);
+					DesktopUtils.open(attachment, context.getFrame());
 				}
 			});
 
@@ -299,7 +299,7 @@ public class AttachmentsPanel extends JPanel {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					DesktopUtils.open(attachment.getParent());
+					DesktopUtils.open(attachment.getParent(), context.getFrame());
 				}
 			});
 
