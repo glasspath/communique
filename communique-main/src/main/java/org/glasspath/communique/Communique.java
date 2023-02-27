@@ -55,7 +55,9 @@ import org.glasspath.aerialist.text.font.FontWeight;
 import org.glasspath.aerialist.tools.EditTools;
 import org.glasspath.aerialist.tools.TextFormatTools;
 import org.glasspath.aerialist.tools.UndoActions;
+import org.glasspath.common.Args;
 import org.glasspath.common.Common;
+import org.glasspath.common.GlasspathSystemProperties;
 import org.glasspath.common.font.Fonts;
 import org.glasspath.common.font.Fonts.FontFilter;
 import org.glasspath.common.os.OsUtils;
@@ -81,9 +83,6 @@ import org.slf4j.LoggerFactory;
 
 @SuppressWarnings("nls")
 public class Communique implements FrameContext {
-
-	public static boolean TEMP_TEST_STANDALONE = true; // TODO
-	public static Class<?> APPLICATION_CLASS = Communique.class; // TODO
 
 	public static final int VERSION_CODE = 1;
 	public static final String VERSION_NAME = "1.0";
@@ -155,7 +154,7 @@ public class Communique implements FrameContext {
 		// TODO: For now we also register bundled fonts here even though we don't use them, we do this because
 		// the email editor may try to load the default font (currently Roboto), if this font is not found AWT
 		// will use another font, registering the default font after that will not update it correctly..
-		Fonts.registerBundledFonts(APPLICATION_CLASS, new FontFilter() {
+		Fonts.registerBundledFonts(System.getProperty(GlasspathSystemProperties.BUNDLED_FONTS_PATH), new FontFilter() {
 
 			@Override
 			public boolean filter(File file) {
@@ -537,13 +536,13 @@ public class Communique implements FrameContext {
 		FrameUtils.saveFrameDimensions(frame, PREFERENCES);
 
 		if (fileTools.checkFileSaved()) {
-			if (TEMP_TEST_STANDALONE) {
-				System.exit(0);
-			} else {
-				frame.setVisible(false);
-			}
+			exitApplication();
 		}
 
+	}
+
+	protected void exitApplication() {
+		frame.setVisible(false);
 	}
 
 	private class ToolBarPanel extends JPanel {
@@ -602,13 +601,17 @@ public class Communique implements FrameContext {
 			}
 		});
 
-		LOGGER.info("Application directory: " + OsUtils.getApplicationJarFile(Communique.class));
+		File applicationJarFile = OsUtils.getApplicationJarFile(Communique.class);
+
+		LOGGER.info("Application directory: " + applicationJarFile);
 		LOGGER.info("user.dir: " + System.getProperty("user.dir"));
 		LOGGER.info("user.home: " + System.getProperty("user.home"));
 		LOGGER.info("Application versionCode: " + VERSION_CODE + " versionName: " + VERSION_NAME);
 
 		String openFileArgument = null;
 		String themeArgument = null;
+		String nativesArgument = null;
+		String fontsArgument = null;
 
 		if (args != null) {
 
@@ -632,6 +635,16 @@ public class Communique implements FrameContext {
 						argParsed = themeArgument != null;
 					}
 
+					if (!argParsed && nativesArgument == null) {
+						nativesArgument = Args.parseArgument(arg, "-natives");
+						argParsed = nativesArgument != null;
+					}
+
+					if (!argParsed && fontsArgument == null) {
+						fontsArgument = Args.parseArgument(arg, "-fonts");
+						argParsed = fontsArgument != null;
+					}
+
 				} catch (Exception e) {
 					LOGGER.error("Exception while parsing argument", e);
 					e.printStackTrace();
@@ -640,6 +653,14 @@ public class Communique implements FrameContext {
 			}
 
 		}
+
+		final String nativeLibraryPath = nativesArgument != null ? nativesArgument : applicationJarFile.getParent();
+		System.setProperty(GlasspathSystemProperties.NATIVE_LIBRARY_PATH, nativeLibraryPath);
+
+		OsUtils.configureJna(nativeLibraryPath);
+
+		String bundledFontsPath = fontsArgument != null ? fontsArgument : applicationJarFile.getParent() + "/fonts";
+		System.setProperty(GlasspathSystemProperties.BUNDLED_FONTS_PATH, bundledFontsPath);
 
 		if (openFileArgument == null && PREFERENCES.getBoolean("openLastFileAtStartup", true)) {
 			openFileArgument = PREFERENCES.get("lastOpenedFile", "");
@@ -662,13 +683,20 @@ public class Communique implements FrameContext {
 			public void run() {
 
 				try {
-					FrameUtils.installLookAndFeel(OsUtils.getApplicationJarFile(APPLICATION_CLASS).getParent());
+					FrameUtils.installLookAndFeel(nativeLibraryPath);
 				} catch (Exception e) {
 					LOGGER.error("Exception while setting look and feel", e);
 					e.printStackTrace();
 				}
 
-				new Communique(null, null, openFile);
+				new Communique(null, null, openFile) {
+
+					@Override
+					protected void exitApplication() {
+						super.exitApplication();
+						System.exit(0);
+					}
+				};
 
 			}
 		});

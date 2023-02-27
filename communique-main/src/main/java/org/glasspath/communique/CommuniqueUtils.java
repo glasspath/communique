@@ -449,7 +449,7 @@ public class CommuniqueUtils {
 
 		String assemblyResolvePath = System.getProperty(GlasspathSystemProperties.NATIVE_LIBRARY_PATH);
 		if (assemblyResolvePath == null) {
-			assemblyResolvePath = OsUtils.getApplicationJarFile(Communique.APPLICATION_CLASS).getParent();
+			assemblyResolvePath = OsUtils.getApplicationJarFile(Communique.class).getParent();
 		}
 
 		try {
