@@ -31,21 +31,18 @@ import javax.swing.JMenuItem;
 import javax.swing.SwingUtilities;
 
 import org.glasspath.common.share.mail.account.Account;
+import org.glasspath.common.swing.tools.AbstractTools;
 import org.glasspath.communique.Communique;
 import org.glasspath.communique.account.AccountManagerDialog;
 import org.glasspath.communique.icons.Icons;
 
-public class AccountTools {
+public class AccountTools extends AbstractTools<Communique> {
 
-	private final Communique context;
-	private final JMenu menu;
 	private final JMenu switchAccountMenu;
 
 	public AccountTools(Communique context) {
+		super(context, "Account");
 
-		this.context = context;
-
-		menu = new JMenu("Account");
 		menu.setIcon(Icons.accountOutline);
 
 		switchAccountMenu = new JMenu("Switch Account");

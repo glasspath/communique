@@ -30,30 +30,16 @@ import javax.swing.JMenuItem;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 
-import org.glasspath.common.swing.color.ColorUtils;
 import org.glasspath.common.swing.dialog.AboutDialog;
 import org.glasspath.common.swing.dialog.AboutDialog.IAbout;
 import org.glasspath.common.swing.help.HelpUtils;
+import org.glasspath.common.swing.tools.AbstractTools;
 import org.glasspath.communique.Communique;
 
-public class HelpTools {
-
-	private final JMenu menu;
-	private final JToolBar toolBar;
+public class HelpTools extends AbstractTools<Communique> {
 
 	public HelpTools(Communique context) {
-
-		this.menu = new JMenu("Help");
-		this.toolBar = new JToolBar("Help") {
-
-			@Override
-			public void updateUI() {
-				super.updateUI();
-				setBackground(ColorUtils.TITLE_BAR_COLOR);
-			}
-
-		};
-		toolBar.setRollover(true);
+		super(context, "Help");
 
 		JMenuItem helpMenuItem = new JMenuItem("Help");
 		helpMenuItem.setAccelerator(KeyStroke.getKeyStroke("F1")); //$NON-NLS-1$

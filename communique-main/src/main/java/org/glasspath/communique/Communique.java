@@ -143,12 +143,12 @@ public class Communique implements FrameContext {
 		this.statusBar = new StatusBar();
 		statusBar.setVisible(false); // TODO
 		this.fileTools = new FileTools(this);
-		this.editTools = new EditTools(undoActions);
+		this.editTools = new EditTools(this, undoActions);
 		this.insertTools = new InsertTools(this);
 		this.viewTools = new ViewTools(this);
 		this.accountTools = new AccountTools(this);
 		this.emailToolBar = new EmailToolBar(this, editorContext);
-		this.textFormatTools = new TextFormatTools(mainPanel.getEmailEditor());
+		this.textFormatTools = new TextFormatTools(this, mainPanel.getEmailEditor());
 		this.helpTools = new HelpTools(this);
 
 		// TODO: For now we also register bundled fonts here even though we don't use them, we do this because

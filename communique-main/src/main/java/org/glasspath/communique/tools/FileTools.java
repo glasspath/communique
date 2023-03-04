@@ -52,34 +52,24 @@ import org.glasspath.aerialist.template.TemplateParser;
 import org.glasspath.aerialist.writer.XDocWriter;
 import org.glasspath.common.os.OsUtils;
 import org.glasspath.common.swing.DesktopUtils;
-import org.glasspath.common.swing.color.ColorUtils;
 import org.glasspath.common.swing.dialog.DialogUtils;
 import org.glasspath.common.swing.file.chooser.FileChooser;
+import org.glasspath.common.swing.tools.AbstractTools;
 import org.glasspath.communique.Communique;
 import org.glasspath.communique.CommuniqueUtils;
 import org.glasspath.communique.editor.EmailEditorPanel;
 
 import com.lowagie.text.DocumentException;
 
-public class FileTools {
+public class FileTools extends AbstractTools<Communique> {
 
-	private final Communique context;
-
-	private final JMenu menu;
-	private final JToolBar toolBar;
 	private final JMenuItem exportEmlMenuItem;
 	private final JMenuItem exportHtmlMenuItem;
 
 	private String currentFilePath = null;
 
 	public FileTools(Communique context) {
-
-		this.context = context;
-
-		this.menu = new JMenu("File");
-		this.toolBar = new JToolBar("File");
-		toolBar.setRollover(true);
-		toolBar.setBackground(ColorUtils.TITLE_BAR_COLOR);
+		super(context, "File");
 
 		JMenuItem newMenuItem = new JMenuItem("New");
 		newMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, OsUtils.CTRL_OR_CMD_MASK));

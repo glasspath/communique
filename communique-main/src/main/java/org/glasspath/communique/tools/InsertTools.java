@@ -33,26 +33,15 @@ import javax.swing.JToolBar;
 import org.glasspath.aerialist.Aerialist;
 import org.glasspath.aerialist.editor.actions.ActionUtils;
 import org.glasspath.common.swing.button.SplitButton;
-import org.glasspath.common.swing.color.ColorUtils;
 import org.glasspath.common.swing.file.chooser.FileChooser;
+import org.glasspath.common.swing.tools.AbstractTools;
 import org.glasspath.communique.Communique;
 import org.glasspath.communique.icons.Icons;
 
-public class InsertTools {
-
-	private final Communique context;
-
-	private final JMenu menu;
-	private final JToolBar toolBar;
+public class InsertTools extends AbstractTools<Communique> {
 
 	public InsertTools(Communique context) {
-
-		this.context = context;
-
-		this.menu = new JMenu("Insert");
-		this.toolBar = new JToolBar("Insert");
-		toolBar.setRollover(true);
-		toolBar.setBackground(ColorUtils.TITLE_BAR_COLOR);
+		super(context, "Insert");
 
 		menu.add(createAttachFileMenuItem());
 		menu.add(ActionUtils.createInsertImageMenuItem(context.getMainPanel().getEmailEditor(), null));
