@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.glasspath.aerialist.AbstractMainPanel;
-import org.glasspath.aerialist.Document;
 import org.glasspath.aerialist.Email;
 import org.glasspath.aerialist.editor.DocumentSourceEditorPanel;
 import org.glasspath.aerialist.swing.view.PageView;
@@ -45,7 +44,6 @@ public class MainPanel extends AbstractMainPanel<Communique> {
 	private final XmlMapper xmlMapper;
 
 	public MainPanel(Communique context, EmailEditorContext editorContext) {
-
 		super(context);
 
 		setLayout(new BorderLayout());
@@ -57,7 +55,7 @@ public class MainPanel extends AbstractMainPanel<Communique> {
 				return context.getFrame();
 			}
 		};
-		sourceEditor = new DocumentSourceEditorPanel();
+		sourceEditor = new DocumentSourceEditorPanel(context);
 
 		xmlMapper = XmlUtils.createXmlMapper();
 
