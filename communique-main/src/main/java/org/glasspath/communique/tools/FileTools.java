@@ -31,10 +31,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import javax.swing.JButton;
-import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 
 import org.glasspath.aerialist.Aerialist;
@@ -176,14 +174,6 @@ public class FileTools extends AbstractTools<Communique> {
 			}
 		});
 
-	}
-
-	public JMenu getMenu() {
-		return menu;
-	}
-
-	public JToolBar getToolBar() {
-		return toolBar;
 	}
 
 	public String getCurrentFilePath() {

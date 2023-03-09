@@ -61,10 +61,6 @@ public class AccountTools extends AbstractTools<Communique> {
 
 	}
 
-	public JMenu getMenu() {
-		return menu;
-	}
-
 	public void refresh() {
 
 		switchAccountMenu.removeAll();

@@ -28,7 +28,6 @@ import java.io.File;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import javax.swing.JToolBar;
 
 import org.glasspath.aerialist.Aerialist;
 import org.glasspath.aerialist.editor.actions.ActionUtils;
@@ -118,14 +117,6 @@ public class InsertTools extends AbstractTools<Communique> {
 
 		}
 
-	}
-
-	public JMenu getMenu() {
-		return menu;
-	}
-
-	public JToolBar getToolBar() {
-		return toolBar;
 	}
 
 }

@@ -53,7 +53,7 @@ public class ViewTools extends AbstractTools<Communique> {
 
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				context.setFileToolsVisible(fileToolsMenuItem.isSelected());
+				context.getFileTools().setToolBarVisible(fileToolsMenuItem.isSelected());
 			}
 		});
 		toolBarsMenu.add(fileToolsMenuItem);
@@ -64,7 +64,7 @@ public class ViewTools extends AbstractTools<Communique> {
 
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				context.setEditToolsVisible(editToolsMenuItem.isSelected());
+				context.getEditTools().setToolBarVisible(editToolsMenuItem.isSelected());
 			}
 		});
 		toolBarsMenu.add(editToolsMenuItem);
@@ -75,7 +75,7 @@ public class ViewTools extends AbstractTools<Communique> {
 
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				context.setInsertToolsVisible(insertToolsMenuItem.isSelected());
+				context.getInsertTools().setToolBarVisible(insertToolsMenuItem.isSelected());
 			}
 		});
 		toolBarsMenu.add(insertToolsMenuItem);
@@ -86,7 +86,7 @@ public class ViewTools extends AbstractTools<Communique> {
 
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				context.setTextFormatToolsVisible(textFormatToolsMenuItem.isSelected());
+				context.getTextFormatTools().setToolBarVisible(textFormatToolsMenuItem.isSelected());
 			}
 		});
 		toolBarsMenu.add(textFormatToolsMenuItem);
@@ -142,14 +142,6 @@ public class ViewTools extends AbstractTools<Communique> {
 			}
 		});
 
-	}
-
-	public JMenu getMenu() {
-		return menu;
-	}
-
-	public JToolBar getToolBar() {
-		return toolBar;
 	}
 
 	public JToolBar getViewModeToolBar() {

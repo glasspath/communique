@@ -25,9 +25,7 @@ package org.glasspath.communique.tools;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 
 import org.glasspath.common.swing.dialog.AboutDialog;
@@ -73,14 +71,6 @@ public class HelpTools extends AbstractTools<Communique> {
 		});
 		menu.add(aboutMenuItem);
 
-	}
-
-	public JMenu getMenu() {
-		return menu;
-	}
-
-	public JToolBar getToolBar() {
-		return toolBar;
 	}
 
 }

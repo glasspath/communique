@@ -437,32 +437,16 @@ public class Communique implements FrameContext {
 		return viewTools;
 	}
 
+	public InsertTools getInsertTools() {
+		return insertTools;
+	}
+
 	public TextFormatTools getTextFormatTools() {
 		return textFormatTools;
 	}
 
 	public UndoActions getUndoActions() {
 		return undoActions;
-	}
-
-	public void setFileToolsVisible(boolean visible) {
-		fileTools.getToolBar().setVisible(visible);
-		revalidateFrame();
-	}
-
-	public void setEditToolsVisible(boolean visible) {
-		editTools.getToolBar().setVisible(visible);
-		revalidateFrame();
-	}
-
-	public void setInsertToolsVisible(boolean visible) {
-		insertTools.getToolBar().setVisible(visible);
-		revalidateFrame();
-	}
-
-	public void setTextFormatToolsVisible(boolean visible) {
-		textFormatTools.getToolBar().setVisible(visible);
-		revalidateFrame();
 	}
 
 	public boolean isStatusBarVisible() {
@@ -472,6 +456,12 @@ public class Communique implements FrameContext {
 	public void setStatusBarVisible(boolean visible) {
 		statusBar.setVisible(visible);
 		revalidateFrame();
+	}
+
+	private void revalidateFrame() {
+		frame.invalidate(); // TODO: Remove?
+		frame.revalidate();
+		frame.repaint();
 	}
 
 	public boolean isSourceEditorEnabled() {
@@ -485,12 +475,6 @@ public class Communique implements FrameContext {
 
 	public EditorContext<EmailEditorPanel> getEditorContext() {
 		return mainPanel.getEmailEditor().getEditorContext();
-	}
-
-	private void revalidateFrame() {
-		frame.invalidate();
-		frame.validate();
-		frame.repaint();
 	}
 
 	public void showTools(List<JToolBar> toolBars) {
