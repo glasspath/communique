@@ -61,6 +61,9 @@ import com.lowagie.text.DocumentException;
 
 public class FileTools extends AbstractTools<Communique> {
 
+	public static boolean TODO_ADD_EXPORT_HTML_MENU_ITEM = false;
+	public static boolean TODO_ADD_PRINT_MENU_ITEM = false;
+
 	private final JMenuItem exportEmlMenuItem;
 	private final JMenuItem exportHtmlMenuItem;
 
@@ -129,7 +132,9 @@ public class FileTools extends AbstractTools<Communique> {
 
 		exportHtmlMenuItem = new JMenuItem("Export to html");
 		exportHtmlMenuItem.setEnabled(false);
-		menu.add(exportHtmlMenuItem);
+		if (TODO_ADD_EXPORT_HTML_MENU_ITEM) {
+			menu.add(exportHtmlMenuItem);
+		}
 		exportHtmlMenuItem.addActionListener(new ActionListener() {
 
 			@Override
@@ -138,10 +143,14 @@ public class FileTools extends AbstractTools<Communique> {
 			}
 		});
 
-		menu.addSeparator();
+		if (TODO_ADD_PRINT_MENU_ITEM) {
+			menu.addSeparator();
+		}
 
 		JMenuItem printItem = new JMenuItem("Print");
-		menu.add(printItem);
+		if (TODO_ADD_PRINT_MENU_ITEM) {
+			menu.add(printItem);
+		}
 		printItem.addActionListener(new ActionListener() {
 
 			@Override
