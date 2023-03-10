@@ -206,7 +206,7 @@ public class EmailEditorPanel extends EditorPanel<EmailEditorPanel> {
 	@Override
 	protected void setEditable(boolean editable) {
 		super.setEditable(editable);
-		context.showTools(null); // TODO?
+		context.updateToolBars();
 	}
 
 	public Point convertPointToPage(Point p, PageView pageView, boolean snap) {

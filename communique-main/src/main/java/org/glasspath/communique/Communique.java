@@ -33,7 +33,6 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.util.List;
 import java.util.prefs.Preferences;
 
 import javax.swing.BorderFactory;
@@ -43,7 +42,6 @@ import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
-import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 
 import org.glasspath.aerialist.Aerialist;
@@ -273,7 +271,7 @@ public class Communique implements FrameContext {
 		});
 
 		undoActions.setUndoManager(mainPanel.getEmailEditor().getUndoManager());
-		showTools(null);
+		updateToolBars();
 
 		accountTools.refresh();
 
@@ -470,21 +468,20 @@ public class Communique implements FrameContext {
 
 	public void setSourceEditorEnabled(boolean sourceEditorEnabled) {
 		this.sourceEditorEnabled = sourceEditorEnabled;
-		showTools(null);
+		updateToolBars();
 	}
 
 	public EditorContext<EmailEditorPanel> getEditorContext() {
 		return mainPanel.getEmailEditor().getEditorContext();
 	}
 
-	public void showTools(List<JToolBar> toolBars) {
+	public void updateToolBars() {
 
 		toolBarPanel.top.removeAll();
 		toolBarPanel.middle.removeAll();
 		toolBarPanel.bottom.removeAll();
 
 		toolBarPanel.top.add(emailToolBar);
-		toolBarPanel.bottom.add(emailToolBar.getContentToolBar());
 
 		if (getEditorContext() != null && !getEditorContext().isEditable()) {
 
@@ -493,22 +490,18 @@ public class Communique implements FrameContext {
 		} else {
 
 			toolBarPanel.middle.setVisible(true);
-
 			toolBarPanel.middle.add(fileTools.getToolBar());
 			toolBarPanel.middle.add(editTools.getToolBar());
 			toolBarPanel.middle.add(insertTools.getToolBar());
 			toolBarPanel.middle.add(textFormatTools.getToolBar());
-			if (toolBars != null) {
-				for (JToolBar toolBar : toolBars) {
-					toolBarPanel.middle.add(toolBar);
-				}
-			}
 			toolBarPanel.middle.add(Box.createHorizontalGlue());
 			if (sourceEditorEnabled) {
 				toolBarPanel.middle.add(viewTools.getViewModeToolBar());
 			}
 
 		}
+
+		toolBarPanel.bottom.add(emailToolBar.getContentToolBar());
 
 		toolBarPanel.revalidate();
 		toolBarPanel.repaint();
