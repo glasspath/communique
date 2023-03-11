@@ -375,6 +375,10 @@ public class Communique implements FrameContext {
 		return frame;
 	}
 
+	public Preferences getPreferences() {
+		return PREFERENCES; // TODO
+	}
+
 	@Override
 	public void setContentChanged(boolean changed) {
 		this.contentChanged = changed;
@@ -445,10 +449,6 @@ public class Communique implements FrameContext {
 
 	public UndoActions getUndoActions() {
 		return undoActions;
-	}
-
-	public boolean isStatusBarVisible() {
-		return statusBar.isVisible();
 	}
 
 	public void setStatusBarVisible(boolean visible) {
