@@ -29,7 +29,6 @@ import java.io.File;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
-import org.glasspath.aerialist.Aerialist;
 import org.glasspath.aerialist.editor.actions.ActionUtils;
 import org.glasspath.common.swing.button.SplitButton;
 import org.glasspath.common.swing.file.chooser.FileChooser;
@@ -106,7 +105,7 @@ public class InsertTools extends AbstractTools<Communique> {
 
 	private void attachFile() {
 
-		String path = FileChooser.browseForFile(null, null, false, context.getFrame(), Aerialist.PREFERENCES, "lastAttachedFilePath"); //$NON-NLS-1$
+		String path = FileChooser.browseForFile(null, null, false, context.getFrame(), context.getPreferences(), "lastAttachedFilePath"); //$NON-NLS-1$
 		if (path != null) {
 
 			File file = new File(path);

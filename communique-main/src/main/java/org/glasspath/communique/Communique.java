@@ -109,7 +109,7 @@ public class Communique implements FrameContext {
 	public static final int SEND_MODE_GMAIL_COMPOSE = 60;
 	public static final int SEND_MODE_OUTLOOK_LIVE_COMPOSE = 61;
 
-	public static Preferences PREFERENCES = Preferences.userNodeForPackage(Communique.class);
+	private static final Preferences preferences = Preferences.userNodeForPackage(Communique.class);
 
 	private final Configuration configuration;
 	private final JFrame frame;
@@ -181,7 +181,7 @@ public class Communique implements FrameContext {
 		}
 		 */
 
-		FrameUtils.loadFrameDimensions(frame, PREFERENCES);
+		FrameUtils.loadFrameDimensions(frame, preferences);
 
 		frame.getContentPane().setLayout(new BorderLayout());
 
@@ -230,12 +230,12 @@ public class Communique implements FrameContext {
 
 						@Override
 						public void componentResized(ComponentEvent e) {
-							FrameUtils.saveFrameDimensions(frame, PREFERENCES);
+							FrameUtils.saveFrameDimensions(frame, preferences);
 						}
 
 						@Override
 						public void componentMoved(ComponentEvent e) {
-							FrameUtils.saveFrameDimensions(frame, PREFERENCES);
+							FrameUtils.saveFrameDimensions(frame, preferences);
 						}
 					});
 
@@ -376,7 +376,7 @@ public class Communique implements FrameContext {
 	}
 
 	public Preferences getPreferences() {
-		return PREFERENCES; // TODO
+		return preferences;
 	}
 
 	@Override
@@ -510,7 +510,7 @@ public class Communique implements FrameContext {
 
 	public void exit() {
 
-		FrameUtils.saveFrameDimensions(frame, PREFERENCES);
+		FrameUtils.saveFrameDimensions(frame, preferences);
 
 		if (fileTools.checkFileSaved()) {
 			exitApplication();
@@ -639,8 +639,8 @@ public class Communique implements FrameContext {
 		String bundledFontsPath = fontsArgument != null ? fontsArgument : applicationJarFile.getParent() + "/fonts";
 		System.setProperty(GlasspathSystemProperties.BUNDLED_FONTS_PATH, bundledFontsPath);
 
-		if (openFileArgument == null && PREFERENCES.getBoolean("openLastFileAtStartup", true)) {
-			openFileArgument = PREFERENCES.get("lastOpenedFile", "");
+		if (openFileArgument == null && preferences.getBoolean("openLastFileAtStartup", true)) {
+			openFileArgument = preferences.get("lastOpenedFile", "");
 		}
 
 		final String openFile = openFileArgument;
@@ -649,7 +649,7 @@ public class Communique implements FrameContext {
 		if (themeArgument != null) {
 			Theme.load(themeArgument);
 		} else {
-			Theme.load(PREFERENCES);
+			Theme.load(preferences);
 		}
 
 		FrameUtils.setSystemLookAndFeelProperties(APP_TITLE);

@@ -35,7 +35,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 
-import org.glasspath.aerialist.Aerialist;
 import org.glasspath.aerialist.AerialistUtils;
 import org.glasspath.aerialist.Content;
 import org.glasspath.aerialist.Email;
@@ -226,7 +225,7 @@ public class FileTools extends AbstractTools<Communique> {
 		if (checkFileSaved()) {
 
 			// TODO: Icon
-			String path = FileChooser.browseForFile(XDoc.EMAIL_EXTENSION, Icons.image, false, context.getFrame(), Aerialist.PREFERENCES, "lastFilePath"); //$NON-NLS-1$
+			String path = FileChooser.browseForFile(XDoc.EMAIL_EXTENSION, Icons.image, false, context.getFrame(), context.getPreferences(), "lastFilePath"); //$NON-NLS-1$
 			if (path != null) {
 				loadEmail(path, null);
 			}
@@ -262,7 +261,7 @@ public class FileTools extends AbstractTools<Communique> {
 		}
 
 		// TODO: Icon
-		String newFilePath = FileChooser.browseForFile(XDoc.EMAIL_EXTENSION, Icons.image, true, context.getFrame(), Communique.PREFERENCES, "lastFilePath", suggestedName); //$NON-NLS-1$
+		String newFilePath = FileChooser.browseForFile(XDoc.EMAIL_EXTENSION, Icons.image, true, context.getFrame(), context.getPreferences(), "lastFilePath", suggestedName); //$NON-NLS-1$
 		if (newFilePath != null) {
 
 			saved = saveCurrentEmail(newFilePath);

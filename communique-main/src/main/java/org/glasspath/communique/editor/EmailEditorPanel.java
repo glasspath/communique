@@ -26,12 +26,14 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.util.prefs.Preferences;
 
 import javax.swing.BorderFactory;
 import javax.swing.JMenu;
@@ -118,6 +120,16 @@ public class EmailEditorPanel extends EditorPanel<EmailEditorPanel> {
 			}
 		});
 
+	}
+
+	@Override
+	public Frame getFrame() {
+		return context.getFrame();
+	}
+
+	@Override
+	public Preferences getPreferences() {
+		return context.getPreferences();
 	}
 
 	@Override
