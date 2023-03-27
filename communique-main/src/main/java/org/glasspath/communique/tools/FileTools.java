@@ -193,15 +193,18 @@ public class FileTools extends AbstractTools<Communique> {
 		exportHtmlMenuItem.setEnabled(enabled);
 	}
 
+	private void clearUndoHistory() {
+		context.getUndoActions().getUndoManager().discardAllEdits();
+		context.getUndoActions().updateActions();
+	}
+
 	private void newAction() {
 
 		if (checkFileSaved()) {
 
 			currentFilePath = null;
 			context.setContentChanged(false);
-
-			context.getUndoActions().getUndoManager().discardAllEdits();
-			context.getUndoActions().updateActions();
+			clearUndoHistory();
 
 			EmailEditorPanel editor = context.getMainPanel().getEmailEditor();
 
@@ -281,6 +284,7 @@ public class FileTools extends AbstractTools<Communique> {
 
 		currentFilePath = null;
 		context.setContentChanged(false);
+		clearUndoHistory();
 
 		EmailEditorPanel editor = context.getMainPanel().getEmailEditor();
 		editor.getSelection().clear();
@@ -356,6 +360,7 @@ public class FileTools extends AbstractTools<Communique> {
 
 			currentFilePath = null;
 			context.setContentChanged(false);
+			clearUndoHistory();
 
 			context.getUndoActions().getUndoManager().discardAllEdits();
 			context.getUndoActions().updateActions();
