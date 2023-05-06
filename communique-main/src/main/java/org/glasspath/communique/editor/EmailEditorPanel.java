@@ -197,7 +197,7 @@ public class EmailEditorPanel extends EditorPanel<EmailEditorPanel> {
 	}
 
 	@Override
-	public void refresh(Component component) {
+	public void refresh(Component component, boolean resetYPolicy, boolean revalidateScrollPane) {
 
 		if (component != null) {
 
