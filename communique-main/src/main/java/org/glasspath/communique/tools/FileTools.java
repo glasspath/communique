@@ -43,8 +43,8 @@ import org.glasspath.aerialist.IFieldContext;
 import org.glasspath.aerialist.XDoc;
 import org.glasspath.aerialist.icons.Icons;
 import org.glasspath.aerialist.layout.ILayoutContext.ExportPhase;
+import org.glasspath.aerialist.media.BufferedImageMediaCache;
 import org.glasspath.aerialist.reader.XDocReader;
-import org.glasspath.aerialist.swing.BufferedImageMediaCache;
 import org.glasspath.aerialist.template.TemplateParser;
 import org.glasspath.aerialist.writer.XDocWriter;
 import org.glasspath.common.os.OsUtils;
@@ -294,18 +294,25 @@ public class FileTools extends AbstractTools<Communique> {
 
 		if (emailPath != null && new File(emailPath).exists()) {
 
-			XDoc xDoc = XDocReader.read(emailPath, mediaCache);
-			if (xDoc != null && xDoc.getContent() != null && xDoc.getContent().getRoot() instanceof Email) {
+			try {
 
-				email = (Email) xDoc.getContent().getRoot();
+				XDoc xDoc = XDocReader.read(emailPath, mediaCache);
+				if (xDoc != null && xDoc.getContent() != null && xDoc.getContent().getRoot() instanceof Email) {
 
-				// When creating a new email by parsing template data we don't want to set currentPath
-				// because this would overwrite the template email when saving
-				if (templateFieldContext == null) {
-					currentFilePath = emailPath;
-					context.setContentChanged(false);
+					email = (Email) xDoc.getContent().getRoot();
+
+					// When creating a new email by parsing template data we don't want to set currentPath
+					// because this would overwrite the template email when saving
+					if (templateFieldContext == null) {
+						currentFilePath = emailPath;
+						context.setContentChanged(false);
+					}
+
 				}
 
+			} catch (Exception e) {
+				Communique.LOGGER.error("Exception while reading XDoc", e); //$NON-NLS-1$
+				DialogUtils.showWarningMessage(context.getFrame(), "Error while loading", "The file could not be opened.", e);
 			}
 
 		}
@@ -350,7 +357,18 @@ public class FileTools extends AbstractTools<Communique> {
 
 		xDoc.setMediaCache(editor.getMediaCache());
 
-		return XDocWriter.write(xDoc, new File(path));
+		try {
+
+			XDocWriter.write(xDoc, new File(path));
+
+			return true;
+
+		} catch (Exception e) {
+			Communique.LOGGER.error("Exception while writing XDoc", e); //$NON-NLS-1$
+			DialogUtils.showWarningMessage(context.getFrame(), "Error while saving", "The file could not be saved.", e);
+		}
+
+		return false;
 
 	}
 
