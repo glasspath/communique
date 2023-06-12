@@ -102,12 +102,13 @@ public class Communique implements FrameContext {
 	public static final int SEND_MODE_GLASSPATH_SYNC = 10;
 	public static final int SEND_MODE_WINDOWS_MAPI = 20;
 	public static final int SEND_MODE_WINDOWS_UWP_SHARE_MENU = 21;
-	public static final int SEND_MODE_WINDOWS_OUTLOOK_OBJECT_MODEL = 30;
-	public static final int SEND_MODE_WINDOWS_OUTLOOK_COMMAND_LINE = 31;
+	public static final int SEND_MODE_WINDOWS_OUTLOOK_CLASSIC_OBJECT_MODEL = 30;
+	public static final int SEND_MODE_WINDOWS_OUTLOOK_CLASSIC_COMMAND_LINE = 31;
 	public static final int SEND_MODE_MAC_APP_KIT_SHARING_SERVICE = 40;
 	public static final int SEND_MODE_THUNDERBIRD_COMMAND_LINE = 50;
 	public static final int SEND_MODE_GMAIL_COMPOSE = 60;
 	public static final int SEND_MODE_OUTLOOK_LIVE_COMPOSE = 61;
+	public static final int SEND_MODE_OUTLOOK_COMPOSE = 70;
 
 	private static final Preferences preferences = Preferences.userNodeForPackage(Communique.class);
 
@@ -331,12 +332,12 @@ public class Communique implements FrameContext {
 				CommuniqueUtils.sendUwpShareMenu(this);
 				break;
 
-			case SEND_MODE_WINDOWS_OUTLOOK_OBJECT_MODEL:
-				CommuniqueUtils.sendOutlookObjectModel(this);
+			case SEND_MODE_WINDOWS_OUTLOOK_CLASSIC_OBJECT_MODEL:
+				CommuniqueUtils.sendOutlookClassicObjectModel(this);
 				break;
 
-			case SEND_MODE_WINDOWS_OUTLOOK_COMMAND_LINE:
-				CommuniqueUtils.sendOutlookCommandLine(this);
+			case SEND_MODE_WINDOWS_OUTLOOK_CLASSIC_COMMAND_LINE:
+				CommuniqueUtils.sendOutlookClassicCommandLine(this);
 				break;
 
 			case SEND_MODE_MAC_APP_KIT_SHARING_SERVICE:
@@ -353,6 +354,10 @@ public class Communique implements FrameContext {
 
 			case SEND_MODE_OUTLOOK_LIVE_COMPOSE:
 				CommuniqueUtils.sendOutlookLiveCompose(this);
+				break;
+
+			case SEND_MODE_OUTLOOK_COMPOSE:
+				CommuniqueUtils.sendOutlookCompose(this);
 				break;
 
 			default:

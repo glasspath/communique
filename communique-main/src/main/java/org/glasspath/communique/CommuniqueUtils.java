@@ -332,7 +332,7 @@ public class CommuniqueUtils {
 		} catch (ShareException e) {
 			throw e;
 		} catch (Exception e) {
-			throw new ShareException("Exception while sharing email through mailto", e); //$NON-NLS-1$
+			throw new ShareException("Exception while sharing email through mailto uri", e); //$NON-NLS-1$
 		}
 
 	}
@@ -353,7 +353,7 @@ public class CommuniqueUtils {
 		} catch (ShareException e) {
 			throw e;
 		} catch (Exception e) {
-			throw new ShareException("Exception while sharing email through gmail compose", e); //$NON-NLS-1$
+			throw new ShareException("Exception while sharing email through Gmail compose uri", e); //$NON-NLS-1$
 		}
 
 	}
@@ -374,7 +374,28 @@ public class CommuniqueUtils {
 		} catch (ShareException e) {
 			throw e;
 		} catch (Exception e) {
-			throw new ShareException("Exception while sharing email through outlook live compose", e); //$NON-NLS-1$
+			throw new ShareException("Exception while sharing email through Outlook Live compose uri", e); //$NON-NLS-1$
+		}
+
+	}
+
+	public static void sendOutlookCompose(Communique context) throws ShareException {
+
+		Mailable mailable = createMailable(context);
+
+		try {
+
+			URI outlookComposeURI = MailShareUtils.createOutlookComposeUri(mailable);
+
+			DesktopUtils.browse(outlookComposeURI);
+
+			// Outlook compose doesn't support attachments, let's open the location so the user can drag it to the email
+			openAttachmentsLocations(mailable, context.getFrame());
+
+		} catch (ShareException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new ShareException("Exception while sharing email through Outlook compose uri", e); //$NON-NLS-1$
 		}
 
 	}
@@ -395,34 +416,34 @@ public class CommuniqueUtils {
 
 	}
 
-	public static void sendOutlookObjectModel(Communique context) throws ShareException {
+	public static void sendOutlookClassicObjectModel(Communique context) throws ShareException {
 
 		Mailable mailable = createMailable(context);
 
 		try {
 
-			OutlookShareUtils.createEmail(mailable);
+			OutlookShareUtils.createOutlookClassicEmail(mailable);
 
 		} catch (ShareException e) {
 			throw e;
 		} catch (Exception e) {
-			throw new ShareException("Exception while sharing email through Outlook (COM)", e); //$NON-NLS-1$
+			throw new ShareException("Exception while sharing email through Outlook Classic (COM)", e); //$NON-NLS-1$
 		}
 
 	}
 
-	public static void sendOutlookCommandLine(Communique context) throws ShareException {
+	public static void sendOutlookClassicCommandLine(Communique context) throws ShareException {
 
 		Mailable mailable = createMailable(context);
 
 		try {
 
-			OutlookShareUtils.createCommandLineEmail(mailable);
+			OutlookShareUtils.createOutlookClassicCommandLineEmail(mailable);
 
 		} catch (ShareException e) {
 			throw e;
 		} catch (Exception e) {
-			throw new ShareException("Exception while sharing email through Outlook (command line)", e); //$NON-NLS-1$
+			throw new ShareException("Exception while sharing email through Outlook Classic (command line)", e); //$NON-NLS-1$
 		}
 
 	}
