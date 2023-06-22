@@ -56,6 +56,7 @@ import org.glasspath.common.swing.dialog.LoginDialog;
 import org.glasspath.common.xml.XmlUtils;
 import org.glasspath.communique.account.AccountFinderDialog;
 import org.glasspath.communique.account.AccountLoginDialog;
+import org.glasspath.communique.editor.EmailEditorContext;
 import org.glasspath.communique.editor.EmailEditorPanel;
 
 public class CommuniqueUtils {
@@ -279,6 +280,14 @@ public class CommuniqueUtils {
 								if (e != null) {
 									Communique.LOGGER.error("Exception while sending email", e); //$NON-NLS-1$
 									DialogUtils.showWarningMessage(context.getFrame(), "Warning", "Something went wrong, please check the application log.", e);
+								} else {
+
+									if (context.getEditorContext() instanceof EmailEditorContext) {
+										((EmailEditorContext) context.getEditorContext()).emailSent(context);
+									}
+
+									context.exit();
+
 								}
 
 							}
