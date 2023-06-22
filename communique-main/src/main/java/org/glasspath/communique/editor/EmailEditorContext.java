@@ -26,6 +26,7 @@ import java.io.File;
 import java.util.List;
 
 import org.glasspath.aerialist.editor.EditorContext;
+import org.glasspath.communique.Communique;
 
 public abstract class EmailEditorContext extends EditorContext<EmailEditorPanel> {
 
@@ -77,6 +78,10 @@ public abstract class EmailEditorContext extends EditorContext<EmailEditorPanel>
 
 	public void setAttachements(List<File> attachements) {
 		this.attachements = attachements;
+	}
+
+	public void emailSent(Communique context) {
+
 	}
 
 }
