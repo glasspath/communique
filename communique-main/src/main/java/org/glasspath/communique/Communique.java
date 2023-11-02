@@ -182,7 +182,7 @@ public class Communique implements FrameContext {
 		}
 		 */
 
-		FrameUtils.loadFrameDimensions(frame, preferences);
+		FrameUtils.loadFrameDimensions(frame, preferences, 45, 45, 850, 675, 0);
 
 		frame.getContentPane().setLayout(new BorderLayout());
 
