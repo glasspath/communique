@@ -260,7 +260,9 @@ public class AttachmentsPanel extends JPanel {
 		public AttachmentButton(File attachment) {
 
 			setFont(getFont().deriveFont(Font.BOLD));
-			putClientProperty("FlatLaf.style", Theme.isDark() ? "borderColor: #222" : "borderColor: #E0E0E0");
+			if (!Theme.isDark()) {
+				putClientProperty("FlatLaf.style", "borderColor: #E0E0E0");
+			}
 			setBackground(ColorUtils.createTransparentColor(getBackground(), 50));
 			setFocusable(false);
 			setArrowMode(SplitButton.ARROW_MODE_HOVER);

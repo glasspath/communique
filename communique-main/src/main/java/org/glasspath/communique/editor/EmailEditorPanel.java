@@ -285,7 +285,7 @@ public class EmailEditorPanel extends EditorPanel<EmailEditorPanel> {
 	public class EditorEmailContainer extends EmailContainer {
 
 		public EditorEmailContainer() {
-			super(Theme.isDark() ? new Color(48, 50, 52) : Color.white);
+			super(Theme.isDark() ? new Color(31, 30, 37) : Color.white);
 
 			ISwingViewContext.installSelectionHandler(this, this);
 

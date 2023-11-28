@@ -560,7 +560,7 @@ public class Communique implements FrameContext {
 			bottom = new JPanel();
 			bottom.setBorder(BorderFactory.createEmptyBorder(8, 15, 0, 0));
 			bottom.setLayout(new BoxLayout(bottom, BoxLayout.LINE_AXIS));
-			bottom.setBackground(Theme.isDark() ? new Color(48, 50, 52) : Color.white);
+			bottom.setBackground(Theme.isDark() ? new Color(31, 30, 37) : Color.white);
 			toolBarContainer.add(bottom, BorderLayout.SOUTH);
 
 			if (!Theme.isDark()) {
