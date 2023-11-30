@@ -58,6 +58,7 @@ import org.glasspath.common.Common;
 import org.glasspath.common.GlasspathSystemProperties;
 import org.glasspath.common.font.Fonts;
 import org.glasspath.common.font.Fonts.FontFilter;
+import org.glasspath.common.macos.MacOSUtils;
 import org.glasspath.common.os.OsUtils;
 import org.glasspath.common.share.mail.Mailable;
 import org.glasspath.common.share.mail.account.Account;
@@ -127,6 +128,7 @@ public class Communique implements FrameContext {
 	private final TextFormatTools textFormatTools;
 	private final HelpTools helpTools;
 
+	private boolean fullScreen = false;
 	// TODO
 	private boolean sourceEditorEnabled = false;
 	private boolean contentChanged = false;
@@ -175,12 +177,9 @@ public class Communique implements FrameContext {
 
 		JRootPane rootPane = frame.getRootPane();
 		rootPane.setBackground(ColorUtils.TITLE_BAR_COLOR);
-		/*
-		if (OsUtils.PLATFORM_MACOS && Theme.isDark()) {
-			rootPane.putClientProperty("apple.awt.fullWindowContent", true);
-			rootPane.putClientProperty("apple.awt.transparentTitleBar", false);
+		if (OsUtils.PLATFORM_MACOS) {
+			MacOSUtils.hideTitleBar(frame);
 		}
-		 */
 
 		FrameUtils.loadFrameDimensions(frame, preferences, 45, 45, 850, 675, 0);
 
@@ -232,6 +231,21 @@ public class Communique implements FrameContext {
 						@Override
 						public void componentResized(ComponentEvent e) {
 							FrameUtils.saveFrameDimensions(frame, preferences);
+
+							if (OsUtils.PLATFORM_MACOS) {
+
+								boolean fullScreen = FrameUtils.isFullScreen(frame);
+
+								if (Communique.this.fullScreen && !fullScreen) {
+									rootPane.setBorder(BorderFactory.createEmptyBorder(MacOSUtils.DEFAULT_HIDDEN_TITLE_BAR_HEIGHT, 0, 0, 0));
+								} else if (!Communique.this.fullScreen && fullScreen) {
+									rootPane.setBorder(BorderFactory.createEmptyBorder());
+								}
+
+								Communique.this.fullScreen = fullScreen;
+
+							}
+
 						}
 
 						@Override
