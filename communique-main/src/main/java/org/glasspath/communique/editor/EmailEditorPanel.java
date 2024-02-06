@@ -56,6 +56,7 @@ import org.glasspath.aerialist.swing.view.PageView;
 import org.glasspath.aerialist.swing.view.TableView;
 import org.glasspath.aerialist.swing.view.TextView;
 import org.glasspath.aerialist.text.font.FontCache;
+import org.glasspath.common.swing.color.ColorUtils;
 import org.glasspath.common.swing.selection.SelectionListener;
 import org.glasspath.common.swing.theme.Theme;
 import org.glasspath.communique.Communique;
@@ -285,7 +286,7 @@ public class EmailEditorPanel extends EditorPanel<EmailEditorPanel> {
 	public class EditorEmailContainer extends EmailContainer {
 
 		public EditorEmailContainer() {
-			super(Theme.isDark() ? new Color(31, 30, 37) : Color.white);
+			super(Theme.isDark() ? ColorUtils.DARK_31 : Color.white);
 
 			ISwingViewContext.installSelectionHandler(this, this);
 
@@ -375,7 +376,7 @@ public class EmailEditorPanel extends EditorPanel<EmailEditorPanel> {
 
 		@Override
 		public Color getDefaultForeground() {
-			return Theme.isDark() ? new Color(187, 187, 187) : Color.black;
+			return Theme.isDark() ? ColorUtils.GRAY_187 : Color.black;
 		}
 
 		@Override

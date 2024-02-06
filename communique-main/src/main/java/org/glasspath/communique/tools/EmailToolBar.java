@@ -135,8 +135,8 @@ public class EmailToolBar extends JPanel {
 		}
 
 		if (Theme.isDark()) {
-			subjectField.lineColor = new Color(75, 75, 75);
-			attachmentsPanel.lineColor = new Color(75, 75, 75);
+			subjectField.lineColor = ColorUtils.GRAY_75;
+			attachmentsPanel.lineColor = ColorUtils.GRAY_75;
 		}
 
 	}
@@ -229,7 +229,7 @@ public class EmailToolBar extends JPanel {
 	private static abstract class InputField extends JPanel {
 
 		private final int marginRight;
-		protected Color lineColor = Theme.isDark() ? new Color(50, 50, 50) : new Color(225, 225, 225);
+		protected Color lineColor = Theme.isDark() ? ColorUtils.GRAY_50 : ColorUtils.GRAY_225;
 
 		private InputField(String name, int marginRight) {
 
@@ -240,7 +240,7 @@ public class EmailToolBar extends JPanel {
 			setBorder(BorderFactory.createEmptyBorder(0, 2, 3, 2 + marginRight));
 
 			JLabel nameLabel = new JLabel(name);
-			nameLabel.setForeground(Theme.isDark() ? new Color(150, 150, 150) : new Color(100, 100, 100));
+			nameLabel.setForeground(Theme.isDark() ? ColorUtils.GRAY_150 : ColorUtils.GRAY_100);
 			add(nameLabel, BorderLayout.WEST);
 
 		}
@@ -353,7 +353,7 @@ public class EmailToolBar extends JPanel {
 
 			super(name, marginRight);
 
-			lineColor = Theme.isDark() ? new Color(50, 50, 50) : new Color(225, 225, 225);
+			lineColor = Theme.isDark() ? ColorUtils.GRAY_50 : ColorUtils.GRAY_225;
 
 			setPreferredSize(new Dimension(25, 25));
 

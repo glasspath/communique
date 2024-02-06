@@ -63,7 +63,7 @@ public class AttachmentsPanel extends JPanel {
 
 	private int buttonHeight = 0;
 	private int rowCount = 0;
-	protected Color lineColor = Theme.isDark() ? new Color(50, 50, 50) : new Color(225, 225, 225);
+	protected Color lineColor = Theme.isDark() ? ColorUtils.GRAY_50 : ColorUtils.GRAY_225;
 
 	public AttachmentsPanel(Communique context) {
 

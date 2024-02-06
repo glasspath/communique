@@ -23,7 +23,6 @@
 package org.glasspath.communique.account;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -49,6 +48,7 @@ import javax.swing.event.ListSelectionListener;
 import org.glasspath.common.share.mail.MailUtils;
 import org.glasspath.common.share.mail.account.Account;
 import org.glasspath.common.swing.button.SplitButton;
+import org.glasspath.common.swing.color.ColorUtils;
 import org.glasspath.common.swing.dialog.DefaultDialog;
 import org.glasspath.common.swing.dialog.LoginDialog;
 import org.glasspath.common.swing.splitpane.InvisibleSplitPane;
@@ -88,7 +88,7 @@ public class AccountManagerDialog extends DefaultDialog {
 		accountsListScrollPane.setBorder(BorderFactory.createEmptyBorder());
 
 		JPanel toolBarPanel = new JPanel();
-		toolBarPanel.setBackground(Theme.isDark() ? accountsList.getBackground() : new Color(248, 248, 248));
+		toolBarPanel.setBackground(Theme.isDark() ? accountsList.getBackground() : ColorUtils.GRAY_248);
 		toolBarPanel.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
 
 		GridBagLayout layout = new GridBagLayout();
