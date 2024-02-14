@@ -394,6 +394,7 @@ public class Communique implements FrameContext {
 		return frame;
 	}
 
+	@Override
 	public Preferences getPreferences() {
 		return preferences;
 	}

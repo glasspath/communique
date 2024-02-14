@@ -23,7 +23,6 @@
 package org.glasspath.communique;
 
 import java.awt.BorderLayout;
-import java.awt.Frame;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,13 +47,7 @@ public class MainPanel extends AbstractMainPanel<Communique> {
 
 		setLayout(new BorderLayout());
 
-		emailEditor = new EmailEditorPanel(context, editorContext) {
-
-			@Override
-			public Frame getFrame() {
-				return context.getFrame();
-			}
-		};
+		emailEditor = new EmailEditorPanel(context, editorContext);
 		sourceEditor = new DocumentSourceEditorPanel(context);
 
 		xmlMapper = XmlUtils.createXmlMapper();

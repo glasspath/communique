@@ -26,14 +26,14 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
-import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.util.prefs.Preferences;
+import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.JMenu;
@@ -56,6 +56,7 @@ import org.glasspath.aerialist.swing.view.PageView;
 import org.glasspath.aerialist.swing.view.TableView;
 import org.glasspath.aerialist.swing.view.TextView;
 import org.glasspath.aerialist.text.font.FontCache;
+import org.glasspath.common.swing.FrameContext;
 import org.glasspath.common.swing.color.ColorUtils;
 import org.glasspath.common.swing.selection.SelectionListener;
 import org.glasspath.common.swing.theme.Theme;
@@ -124,13 +125,8 @@ public class EmailEditorPanel extends EditorPanel<EmailEditorPanel> {
 	}
 
 	@Override
-	public Frame getFrame() {
-		return context.getFrame();
-	}
-
-	@Override
-	public Preferences getPreferences() {
-		return context.getPreferences();
+	public FrameContext getFrameContext() {
+		return context;
 	}
 
 	@Override
@@ -198,7 +194,7 @@ public class EmailEditorPanel extends EditorPanel<EmailEditorPanel> {
 	}
 
 	@Override
-	public void refresh(Component component, boolean resetYPolicy, boolean revalidateScrollPane) {
+	public void refresh(Component component, Map<Component, Rectangle> anchoredElementBounds, boolean resetYPolicy, boolean revalidateScrollPane) {
 
 		if (component != null) {
 
@@ -365,13 +361,18 @@ public class EmailEditorPanel extends EditorPanel<EmailEditorPanel> {
 		}
 
 		@Override
+		public Map<Component, Rectangle> getAnchoredElementBounds(Component component) {
+			return AerialistUtils.getAnchoredElementBounds(component);
+		}
+
+		@Override
 		public void undoableEditHappened(UndoableEdit edit) {
 			EmailEditorPanel.this.undoableEditHappened(edit);
 		}
 
 		@Override
-		public void refresh(Component component) {
-			EmailEditorPanel.this.refresh(component);
+		public void refresh(Component component, Map<Component, Rectangle> anchoredElementBounds) {
+			EmailEditorPanel.this.refresh(component, anchoredElementBounds);
 		}
 
 		@Override
